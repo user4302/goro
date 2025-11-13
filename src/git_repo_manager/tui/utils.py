@@ -5,9 +5,27 @@ from pathlib import Path
 from typing import Optional
 
 def is_valid_repo_name(name: str) -> bool:
-    """Check if a repository name is valid."""
-    # Only allow letters, numbers, spaces, underscores, and hyphens
-    return bool(re.match(r'^[\w\s-]+$', name))
+    """Check if a repository name is valid.
+    
+    Allows most common characters while preventing:
+    - Path separators (\ /)
+    - Wildcards (* ?)
+    - Quotes and other problematic characters
+    """
+    # Disallowed characters that could cause issues
+    # \ / : * ? " < > |
+    if any(c in name for c in '\\/:*?"<>|'):
+        return False
+        
+    # Basic length check
+    if not (0 < len(name) <= 100):
+        return False
+        
+    # Must contain at least one non-whitespace character
+    if not name.strip():
+        return False
+        
+    return True
 
 def safe_id(name: str) -> str:
     """Generate a unique widget ID from a repository name."""

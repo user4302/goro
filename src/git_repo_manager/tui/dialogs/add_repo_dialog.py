@@ -83,7 +83,8 @@ class AddRepoDialog(ModalScreen[tuple[str, Path] | None]):
                 
             if not is_valid_repo_name(name):
                 self.notify(
-                    "Invalid repository name. Only alphanumeric, '-', and '_' characters are allowed.",
+                    "Invalid repository name. Please avoid these characters: \\ / : * ? \" < > |\n"
+                    "Names must be 1-100 characters long and contain at least one non-space character.",
                     severity="error"
                 )
                 return

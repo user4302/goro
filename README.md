@@ -1,6 +1,12 @@
-# Git Repository Manager (v0.2.1)
+# Git Repository Manager (v0.2.2)
 
 A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+
+## Features (v0.2.2)
+
+- Enhanced repository name validation to allow more special characters
+- Improved error messages for invalid repository names
+- Added length validation for repository names (1-100 characters)
 
 ## Features (v0.2.1)
 
