@@ -1,0 +1,61 @@
+/* Dialog styles */
+
+/* Modal overlay */
+AddRepoDialog {
+    align: center middle;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Dialog container */
+AddRepoDialog > Container {
+    width: 60;
+    height: auto;
+    background: $panel;
+    border: panel $accent;
+    padding: 2;
+}
+
+/* Dialog header */
+AddRepoDialog .dialog-header {
+    text-style: bold;
+    height: 3;
+    content-align: center middle;
+    margin-bottom: 1;
+    border-bottom: solid $accent;
+}
+
+/* Dialog content */
+AddRepoDialog .dialog-content {
+    height: auto;
+    margin: 1 0 2 0;
+}
+
+/* Style all direct children of dialog content */
+AddRepoDialog .dialog-content > * {
+    margin: 1 0;
+}
+
+/* Button container */
+AddRepoDialog .dialog-buttons {
+    height: auto;
+    margin-top: 2;
+    width: 100%;
+    align: right middle;
+    column-span: 2;
+}
+
+/* Buttons */
+AddRepoDialog Button {
+    width: 1fr;
+    margin-left: 1;
+}
+
+/* Input fields */
+AddRepoDialog Input {
+    width: 100%;
+}
+
+/* Labels for inputs */
+AddRepoDialog .dialog-content > Label {
+    margin-bottom: 0;
+}

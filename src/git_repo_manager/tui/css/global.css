@@ -1,0 +1,79 @@
+/* Main screen layout */
+Screen {
+    layout: grid;
+    grid-size: 2;
+    grid-rows: auto 1fr auto;
+    grid-columns: 1fr 2fr;
+    padding: 1;
+}
+
+/* Header and footer */
+#header, #footer {
+    column-span: 2;
+}
+
+#header {
+    height: 3;
+}
+
+#footer {
+    height: 1;
+}
+
+/* Shared component styles */
+.header {
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+/* Repository list */
+.repo-list {
+    border: panel #666666;
+    height: 100%;
+}
+
+#repo-details {
+    height: 100%;
+}
+
+/* Modal and Dialog styles */
+Screen.-modal {
+    align: center middle;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+Screen.-modal > Container {
+    width: 60;
+    height: auto;
+    background: $panel;
+    border: panel $accent;
+    padding: 1 2;
+}
+
+.dialog-header {
+    text-style: bold;
+    height: 3;
+    content-align: center middle;
+    margin-bottom: 1;
+}
+
+.dialog-content {
+    height: auto;
+    margin: 1 0 2 0;
+}
+
+.dialog-content > * {
+    margin: 1 0;
+}
+
+.dialog-buttons {
+    height: auto;
+    margin-top: 1;
+    width: 100%;
+    align: right middle;
+}
+
+.dialog-buttons > Button {
+    margin-left: 1;
+    width: 1fr;
+}
