@@ -35,18 +35,34 @@ class RepoList(Static):
 
     def __init__(self, repos: dict, **kwargs):
         super().__init__(**kwargs)
-        self.repos = dict(repos)  # Ensure we're working with a plain dict
+        self._repos = dict(repos)  # Internal storage
         self.selected_repo = next(iter(repos), "")
+        
+    @property
+    def repos(self) -> dict:
+        return self._repos
+        
+    @repos.setter
+    def repos(self, new_repos: dict) -> None:
+        self._repos = dict(new_repos)
+        # Update the list view when repos change
+        if hasattr(self, '_list_view'):
+            self._list_view.clear()
+            for name in self._repos:
+                self._list_view.append(ListItem(Label(name), id=f"repo-{name}"))
+            if self._repos and not self.selected_repo:
+                self.selected_repo = next(iter(self._repos))
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the repository list."""
         with Vertical():
             yield Label("Repositories", classes="header")
             with ListView(
-                *[ListItem(Label(name), id=f"repo-{name}") for name in self.repos],
+                *[ListItem(Label(name), id=f"repo-{name}") for name in self._repos],
                 id="repo-list",
                 classes="repo-list",
             ) as list_view:
+                self._list_view = list_view  # Store reference to update later
                 list_view.index = 0
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
@@ -164,6 +180,31 @@ class GRMApp(App):
     #repo-details {
         height: 100%;
     }
+    
+    /* Dialog styles */
+    .dialog {
+        background: $surface;
+        border: panel $accent;
+        width: 60;
+        height: auto;
+        padding: 1 2;
+        margin: 1 2;
+        layer: overlay;
+    }
+    
+    .dialog > Vertical > * {
+        width: 100%;
+        margin-bottom: 1;
+    }
+    
+    .dialog > Vertical > Horizontal {
+        align-horizontal: right;
+        margin-top: 1;
+    }
+    
+    .dialog > Vertical > Horizontal > Button {
+        margin-left: 1;
+    }
     """
 
     BINDINGS = [
@@ -200,23 +241,126 @@ class GRMApp(App):
         details.update_repo(repo)
         self.query_one(StatusBar).status = f"Selected: {self.selected_repo}"
 
-    def action_add_repo(self) -> None:
+    async def action_add_repo(self) -> None:
         """Add a new repository."""
-        # TODO: Implement add repository dialog
-        self.query_one(StatusBar).status = "Add repository: Not implemented yet"
+        from rich.text import Text
+        from textual.containers import Container, Horizontal, Vertical
+        from textual.widgets import Button, Input, Label
+        
+        class AddRepoDialog(Container):
+            """A simple dialog for adding a new repository."""
+            
+            def compose(self) -> ComposeResult:
+                with Vertical():
+                    yield Label("Add Repository", classes="header")
+                    yield Label("Name:")
+                    yield Input(placeholder="Repository name", id="repo-name")
+                    yield Label("Path:")
+                    yield Input(placeholder="Repository path", id="repo-path")
+                    with Horizontal():
+                        yield Button("Cancel", variant="error", id="cancel-btn")
+                        yield Button("Add", variant="primary", id="add-btn")
+            
+            async def on_button_pressed(self, event: Button.Pressed) -> None:
+                """Handle button presses in the dialog."""
+                if event.button.id == "add-btn":
+                    name_input = self.query_one("#repo-name", Input)
+                    path_input = self.query_one("#repo-path", Input)
+                    name = name_input.value.strip()
+                    path = path_input.value.strip()
+                    
+                    if name and path:
+                        try:
+                            # Add the repository to the config
+                            self.app.config.add_repo(name, Path(path).expanduser().resolve())
+                            self.app.config.save()
+                            
+                            # Update the UI
+                            repo_list = self.app.query_one("#repo-list", RepoList)
+                            repo_list.repos = self.app.config.repos
+                            
+                            # Select the newly added repo
+                            self.app.selected_repo = name
+                            details = self.app.query_one(RepoDetails)
+                            details.update_repo(self.app.config.repos[name])
+                            
+                            self.app.query_one(StatusBar).status = f"Added repository: {name}"
+                        except Exception as e:
+                            self.app.query_one(StatusBar).status = f"Error adding repository: {str(e)}"
+                
+                # Close the dialog
+                self.remove()
+        
+        # Create and show the dialog
+        dialog = AddRepoDialog(classes="dialog")
+        self.mount(dialog)
+        
+        # Use call_after_refresh to ensure the dialog is mounted before focusing
+        def set_focus():
+            name_input = self.query_one("#repo-name", Input)
+            if name_input:
+                name_input.focus()
+        
+        self.call_after_refresh(set_focus)
 
-    def action_remove_repo(self) -> None:
+    async def action_remove_repo(self) -> None:
         """Remove the selected repository."""
         if not self.selected_repo:
             self.query_one(StatusBar).status = "No repository selected"
             return
-
-        # TODO: Implement confirmation dialog
-        if self.config.remove_repo(self.selected_repo):
-            self.query_one(StatusBar).status = f"Removed repository: {self.selected_repo}"
-            self.refresh_repo_list()
-        else:
-            self.query_one(StatusBar).status = "Failed to remove repository"
+            
+        from rich.text import Text
+        from textual.containers import Container, Horizontal, Vertical
+        from textual.widgets import Button, Label
+        
+        class ConfirmDialog(Container):
+            """A simple confirmation dialog."""
+            
+            def __init__(self, repo_name: str, **kwargs):
+                super().__init__(**kwargs)
+                self.repo_name = repo_name
+            
+            def compose(self) -> ComposeResult:
+                with Vertical():
+                    yield Label(f"Remove Repository: {self.repo_name}", classes="header")
+                    yield Label("Are you sure you want to remove this repository?")
+                    with Horizontal():
+                        yield Button("Cancel", variant="primary", id="cancel-btn")
+                        yield Button("Remove", variant="error", id="remove-btn")
+            
+            async def on_button_pressed(self, event: Button.Pressed) -> None:
+                """Handle button presses in the dialog."""
+                if event.button.id == "remove-btn":
+                    if self.app.config.remove_repo(self.repo_name):
+                        self.app.config.save()
+                        # Update the UI
+                        repo_list = self.app.query_one("#repo-list", RepoList)
+                        repo_list.repos = self.app.config.repos
+                        
+                        # Clear selection if needed
+                        if not self.app.config.repos:
+                            self.app.selected_repo = ""
+                            details = self.app.query_one(RepoDetails)
+                            details.update_repo(None)
+                        
+                        self.app.query_one(StatusBar).status = f"Removed repository: {self.repo_name}"
+                    else:
+                        self.app.query_one(StatusBar).status = "Failed to remove repository"
+                
+                # Close the dialog
+                self.remove()
+        
+        # Create and show the dialog
+        dialog = ConfirmDialog(self.selected_repo, classes="dialog")
+        self.mount(dialog)
+        
+        # Use call_after_refresh to ensure the dialog is mounted before focusing
+        def set_focus_remove():
+            remove_btn = self.query_one("#remove-btn", Button)
+            if remove_btn:
+                remove_btn.focus()
+        
+        self.call_after_refresh(set_focus_remove)
 
     def action_sync_repo(self) -> None:
         """Sync the selected repository."""
