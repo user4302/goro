@@ -53,19 +53,25 @@ class GRMApp(App):
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
-        yield Header(show_clock=True, id="header")
-        
-        # Left side - Repository list with header
-        with Container(id="repo-container"):
-            yield Label("Repositories", classes="section-header")
-            yield RepoList(self.config.repos, id="repo-list")
+        # Main app container with grid layout
+        with Container(classes="main-app"):
+            yield Header(show_clock=True, id="header")
             
-        # Right side - Repository details
-        yield RepoDetails(id="repo-details")
-        
-        # Status bar and footer
-        yield StatusBar("Status: Ready", id="status-bar")
-        yield Footer()
+            # Main content area
+            with Horizontal():
+                # Left side - Repository list with header
+                with Container(id="repo-container"):
+                    yield Label("Repositories", classes="section-header")
+                    yield RepoList(self.config.repos, id="repo-list")
+                    
+                # Right side - Repository details
+                yield RepoDetails(id="repo-details")
+            
+            # Status bar and footer
+            status_bar = StatusBar(id="status-bar")
+            status_bar.status = "Ready"
+            yield status_bar
+            yield Footer()
 
     def on_mount(self) -> None:
         """Handle app mount event."""
