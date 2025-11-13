@@ -172,23 +172,15 @@ class GRMApp(App):
                 except Exception as e:
                     self.notify(f"Error removing repository: {str(e)}", severity="error")
         
-        # Show the dialog and wait for result
-        self.push_screen(
-            ConfirmDialog(
-                f"Are you sure you want to remove '{self.selected_repo}'?",
-                confirm_text="Remove",
-                cancel_text="Cancel"
-            ),
-            remove_repo
+        # Create and show the dialog
+        dialog = ConfirmDialog(
+            f"Are you sure you want to remove '{self.selected_repo}'?",
+            confirm_text="Remove",
+            cancel_text="Cancel"
         )
         
-        # Focus the cancel button
-        def set_focus_cancel():
-            cancel_btn = self.query_one("#cancel-btn", Button)
-            if cancel_btn:
-                cancel_btn.focus()
-                
-        self.call_after_refresh(set_focus_cancel)
+        # Show the dialog and wait for result
+        self.push_screen(dialog, remove_repo)
 
     async def action_edit_repo(self) -> None:
         """Edit the selected repository."""
