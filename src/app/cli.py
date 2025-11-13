@@ -7,7 +7,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from git_repo_manager.config import Config, RepoConfig
+from app.config import Config, RepoConfig
 
 app = typer.Typer(name="grm", help="Git Repository Manager")
 console = Console()
@@ -16,7 +16,7 @@ console = Console()
 def version_callback(value: bool):
     """Print version and exit."""
     if value:
-        from git_repo_manager import __version__
+        from app import __version__
 
         console.print(f"Git Repository Manager v{__version__}")
         raise typer.Exit()
@@ -119,7 +119,7 @@ def remove(name: str):
 @app.command()
 def ui():
     """Launch the Textual TUI interface."""
-    from git_repo_manager.tui.app import GRMApp
+    from app.tui.app import GRMApp
 
     app = GRMApp()
     app.run()

@@ -25,7 +25,7 @@ from textual.widgets import (
     Tabs,
 )
 
-from git_repo_manager.config import Config, RepoConfig
+from app.config import Config, RepoConfig
 
 # Import widgets and dialogs
 from .widgets import RepoList, RepoDetails, StatusBar
