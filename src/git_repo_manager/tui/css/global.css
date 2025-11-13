@@ -4,7 +4,8 @@ Screen {
     grid-size: 2;
     grid-rows: auto 1fr auto;
     grid-columns: 1fr 2fr;
-    padding: 1;
+    overflow: hidden;
+    height: 100vh;
 }
 
 /* Header and footer */
@@ -33,6 +34,7 @@ Screen {
     border: panel #666666;
     background: $panel;
     overflow: hidden;
+    layout: vertical;
 }
 
 .section-header {
@@ -40,12 +42,14 @@ Screen {
     text-align: center;
     padding: 1;
     border-bottom: solid $accent;
+    height: auto;
 }
 
 #repo-list {
     height: 1fr;
     overflow-y: auto;
     background: $panel;
+    scrollbar-gutter: stable;
 }
 
 #repo-list > ListItem {

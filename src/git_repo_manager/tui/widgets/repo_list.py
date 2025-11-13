@@ -1,5 +1,10 @@
 """Repository list widget for the Git Repository Manager TUI."""
-from typing import Dict, Optional
+from __future__ import annotations
+from typing import Dict, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from textual.widgets import Label, ListItem, ListView
+    from textual.message import Message
 
 from textual.app import ComposeResult
 from textual.message import Message
@@ -63,38 +68,27 @@ class RepoList(ListView):
                             return
                     except Exception:
                         continue
-            # Notify about the selection change
-            self.post_message(self.Selected(self.selected_repo))
+            # The selection will be handled by the ListView.Selected event
 
-    def on_list_view_selected(self, event: ListView.Selected) -> None:
+    def on_list_view_selected(self, event: 'RepoList.Selected') -> None:
         """Handle repository selection."""
-        if not event.item or not hasattr(event.item, 'id'):
-            return
-            
-        # Get the repository name from the ListItem's content
-        for child in event.item.children:
-            if isinstance(child, Label):
-                # Get the text content of the label
-                try:
-                    # Try to get text using render() method
-                    rendered = child.render()
-                    if hasattr(rendered, 'plain'):
-                        repo_name = rendered.plain
-                    else:
-                        # Fallback to string representation
-                        repo_name = str(rendered)
-                    
-                    if repo_name in self._repos:
-                        self.selected_repo = repo_name
-                        self.post_message(self.Selected(repo_name))
-                        break
-                except Exception as e:
-                    # If we can't get the text, skip this item
-                    continue
+        if hasattr(event, 'repo_name') and event.repo_name in self._repos:
+            self.selected_repo = event.repo_name
 
-    class Selected(Message):
+    class Selected(ListView.Selected):
         """Message sent when a repository is selected."""
 
-        def __init__(self, repo_name: str):
-            super().__init__()
-            self.repo_name = repo_name
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            # Get the repository name from the selected item
+            if hasattr(self, 'item') and hasattr(self.item, 'children'):
+                for child in self.item.children:
+                    if isinstance(child, Label):
+                        try:
+                            rendered = child.render()
+                            self.repo_name = rendered.plain if hasattr(rendered, 'plain') else str(rendered)
+                            break
+                        except Exception:
+                            continue
+            else:
+                self.repo_name = ''
