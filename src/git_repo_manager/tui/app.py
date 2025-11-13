@@ -362,6 +362,80 @@ class GRMApp(App):
         
         self.call_after_refresh(set_focus_remove)
 
+    async def action_edit_repo(self) -> None:
+        """Edit the selected repository."""
+        if not self.selected_repo:
+            self.query_one(StatusBar).status = "No repository selected"
+            return
+            
+        from rich.text import Text
+        from textual.containers import Container, Horizontal, Vertical
+        from textual.widgets import Button, Input, Label
+        
+        repo = self.config.repos[self.selected_repo]
+        
+        class EditRepoDialog(Container):
+            """A dialog for editing a repository."""
+            
+            def compose(self) -> ComposeResult:
+                with Vertical():
+                    yield Label(f"Edit Repository: {self.app.selected_repo}", classes="header")
+                    yield Label("Name:")
+                    yield Input(value=self.app.selected_repo, id="repo-name")
+                    yield Label("Path:")
+                    yield Input(value=str(repo.path), id="repo-path")
+                    with Horizontal():
+                        yield Button("Cancel", variant="error", id="cancel-btn")
+                        yield Button("Save", variant="primary", id="save-btn")
+            
+            async def on_button_pressed(self, event: Button.Pressed) -> None:
+                """Handle button presses in the dialog."""
+                if event.button.id == "save-btn":
+                    name_input = self.query_one("#repo-name", Input)
+                    path_input = self.query_one("#repo-path", Input)
+                    new_name = name_input.value.strip()
+                    new_path = path_input.value.strip()
+                    
+                    if new_name and new_path:
+                        try:
+                            old_name = self.app.selected_repo
+                            
+                            # If name changed, remove old entry and add new one
+                            if new_name != old_name:
+                                self.app.config.remove_repo(old_name)
+                                
+                            # Add/update the repository
+                            self.app.config.add_repo(new_name, Path(new_path).expanduser().resolve())
+                            self.app.config.save()
+                            
+                            # Update the UI
+                            repo_list = self.app.query_one("#repo-list", RepoList)
+                            repo_list.repos = self.app.config.repos
+                            
+                            # Update selection
+                            self.app.selected_repo = new_name
+                            details = self.app.query_one(RepoDetails)
+                            details.update_repo(self.app.config.repos[new_name])
+                            
+                            self.app.query_one(StatusBar).status = f"Updated repository: {new_name}"
+                        except Exception as e:
+                            self.app.query_one(StatusBar).status = f"Error updating repository: {str(e)}"
+                
+                # Close the dialog
+                self.remove()
+        
+        # Create and show the dialog
+        dialog = EditRepoDialog(classes="dialog")
+        self.mount(dialog)
+        
+        # Focus the name input
+        def set_focus():
+            name_input = self.query_one("#repo-name", Input)
+            if name_input:
+                name_input.focus()
+        
+        self.call_after_refresh(set_focus)
+
     def action_sync_repo(self) -> None:
         """Sync the selected repository."""
         if not self.selected_repo:
@@ -370,15 +444,6 @@ class GRMApp(App):
 
         # TODO: Implement repository sync
         self.query_one(StatusBar).status = f"Syncing repository: {self.selected_repo}"
-
-    def action_edit_repo(self) -> None:
-        """Edit the selected repository."""
-        if not self.selected_repo:
-            self.query_one(StatusBar).status = "No repository selected"
-            return
-
-        # TODO: Implement repository editing
-        self.query_one(StatusBar).status = f"Editing repository: {self.selected_repo}"
 
     def refresh_repo_list(self) -> None:
         """Refresh the repository list."""

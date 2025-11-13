@@ -1,16 +1,17 @@
-# Git Repository Manager (v0.1.1)
+# Git Repository Manager (v0.2.0)
 
 A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
 
-## Features (v0.1.1)
+## Features (v0.2.0)
 
 - Track multiple Git repositories
 - Intuitive TUI interface with repository list and details view
 - View repository status and details at a glance
-- Add and remove repositories with ease
-- Plugin system for extending functionality (coming soon)
-- Cross-platform support (Windows, Linux, macOS)
+- Add, edit, and remove repositories with ease
+- Interactive dialogs for repository management
 - Status bar with current operation feedback
+- Cross-platform support (Windows, Linux, macOS)
+- Plugin system for extending functionality (coming soon)
 
 ## Installation
 
