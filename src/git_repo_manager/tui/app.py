@@ -29,7 +29,8 @@ from git_repo_manager.config import Config, RepoConfig
 
 # Import widgets and dialogs
 from .widgets import RepoList, RepoDetails, StatusBar
-from .dialogs import AddRepoDialog, ConfirmDialog, EditRepoDialog
+from .dialogs.repo_dialog import RepoDialog
+from .dialogs.confirm_dialog import ConfirmDialog
 from .utils import safe_id, is_valid_repo_name, resolve_path
 
 class GRMApp(App):
@@ -92,8 +93,6 @@ class GRMApp(App):
 
     async def action_add_repo(self) -> None:
         """Add a new repository."""
-        from .dialogs.add_repo_dialog import AddRepoDialog
-        
         async def handle_dialog_result(result: tuple[str, Path] | None) -> None:
             if not result:
                 return  # User cancelled
@@ -108,40 +107,30 @@ class GRMApp(App):
                 )
                 return
                 
-            # Check for duplicate path
-            for repo_name, repo in self.config.repos.items():
-                if Path(repo.path).resolve() == path:
-                    self.notify(
-                        f"A repository at this path already exists with name '{repo_name}'",
-                        severity="error"
-                    )
-                    return
-            
             try:
-                # Add the repository
+                # Add the new repository
                 self.config.add_repo(name, str(path))
                 self.config.save()
                 
-                # Update UI
-                self.selected_repo = name
+                # Update the UI
                 self.query_one(StatusBar).status = f"Added repository: {name}"
                 
-                # Refresh the repository list
+                # Update the repository list
                 repo_list = self.query_one("#repo-list", RepoList)
                 repo_list.repos = self.config.repos
                 
                 # Select the new repository
-                for i, item in enumerate(repo_list.children):
-                    if item.id == safe_id(name):
-                        repo_list.index = i
-                        break
-                        
-            except Exception as e:
-                self.notify(f"Error adding repository: {str(e)}", severity="error")
+                self.selected_repo = name
+                
+                # Update the details view
+                details = self.query_one(RepoDetails)
+                details.update_repo(self.config.repos[name])
+                
+            except ValueError as e:
+                self.notify(str(e), severity="error")
         
-        # Create and push the screen with a callback
-        dialog = AddRepoDialog()
-        await self.push_screen(dialog, handle_dialog_result)
+        # Show the dialog
+        self.push_screen(RepoDialog(mode="add"), handle_dialog_result)
 
     async def action_remove_repo(self) -> None:
         """Remove the selected repository."""
@@ -187,7 +176,7 @@ class GRMApp(App):
         if not self.selected_repo:
             self.notify("No repository selected", severity="warning")
             return
-        
+            
         repo = self.config.repos[self.selected_repo]
         
         async def handle_dialog_result(result: tuple[str, str, Path] | None) -> None:
@@ -236,12 +225,18 @@ class GRMApp(App):
                         repo_list.index = i
                         break
                 
+                # Update the details view
+                details = self.query_one(RepoDetails)
+                details.update_repo(self.config.repos[new_name])
+                
             except Exception as e:
                 self.notify(f"Error updating repository: {str(e)}", severity="error")
         
-        # Create and show the dialog
-        dialog = EditRepoDialog(repo_name=self.selected_repo, repo_path=repo.path)
-        await self.push_screen(dialog, handle_dialog_result)
+        # Show the dialog
+        self.push_screen(
+            RepoDialog(mode="edit", repo_name=self.selected_repo, repo_path=repo.path),
+            handle_dialog_result
+        )
 
     async def action_sync_repo(self) -> None:
         """Sync the selected repository."""
