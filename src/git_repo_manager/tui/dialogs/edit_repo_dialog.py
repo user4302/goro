@@ -13,47 +13,7 @@ from ..utils import is_valid_repo_name, resolve_path
 class EditRepoDialog(ModalScreen[Tuple[str, str, Path] | None]):
     """A dialog for editing an existing repository."""
     
-    DEFAULT_CSS = """
-    EditRepoDialog {
-        align: center middle;
-    }
-    
-    EditRepoDialog > Container {
-        width: 80%;
-        height: auto;
-        max-width: 60;
-        background: $surface;
-        padding: 1 2;
-        border: panel $primary;
-        border-title-color: $text;
-    }
-    
-    EditRepoDialog .dialog-header {
-        width: 100%;
-        text-style: bold;
-        padding: 1 0;
-        border-bottom: solid $primary;
-        margin-bottom: 1;
-    }
-    
-    EditRepoDialog .dialog-content {
-        width: 100%;
-        height: auto;
-        margin: 1 0;
-    }
-    
-    EditRepoDialog .dialog-buttons {
-        width: 100%;
-        height: auto;
-        align: right middle;
-        margin-top: 1;
-    }
-    
-    EditRepoDialog Input {
-        width: 100%;
-        margin-bottom: 1;
-    }
-    """
+    CSS_PATH = "../css/dialogs.tcss"
     
     def __init__(self, repo_name: str, repo_path: Path, **kwargs):
         super().__init__(**kwargs)
@@ -66,8 +26,8 @@ class EditRepoDialog(ModalScreen[Tuple[str, str, Path] | None]):
     def compose(self) -> ComposeResult:
         """Create the dialog content."""
         with Container():
+            yield Label(f"Edit Repository: {self.repo_name}", classes="dialog-header")
             with Vertical(classes="dialog-content"):
-                yield Label(f"Edit Repository: {self.repo_name}", classes="dialog-header")
                 yield Label("Name:")
                 yield self._name_input
                 yield Label("Path:")

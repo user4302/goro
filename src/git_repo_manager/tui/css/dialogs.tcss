@@ -1,14 +1,15 @@
 /* Dialog styles */
 
 /* Modal overlay */
-AddRepoDialog {
+ModalScreen {
     align: center middle;
     background: rgba(0, 0, 0, 0.5);
 }
 
 /* Dialog container */
-AddRepoDialog > Container {
-    width: 60;
+.dialog-screen > Container {
+    width: 80%;
+    max-width: 60;
     height: auto;
     background: $panel;
     border: panel $accent;
@@ -16,27 +17,29 @@ AddRepoDialog > Container {
 }
 
 /* Dialog header */
-AddRepoDialog .dialog-header {
+.dialog-header {
     text-style: bold;
     height: 3;
     content-align: center middle;
     margin-bottom: 1;
     border-bottom: solid $accent;
+    width: 100%;
 }
 
 /* Dialog content */
-AddRepoDialog .dialog-content {
+.dialog-content {
     height: auto;
     margin: 1 0 2 0;
+    width: 100%;
 }
 
 /* Style all direct children of dialog content */
-AddRepoDialog .dialog-content > * {
+.dialog-content > * {
     margin: 1 0;
 }
 
 /* Button container */
-AddRepoDialog .dialog-buttons {
+.dialog-buttons {
     height: auto;
     margin-top: 2;
     width: 100%;
@@ -45,17 +48,24 @@ AddRepoDialog .dialog-buttons {
 }
 
 /* Buttons */
-AddRepoDialog .dialog-buttons > Button {
+.dialog-buttons > Button {
     min-width: 8;
     margin-left: 1;
 }
 
 /* Input fields */
-AddRepoDialog Input {
+Input {
     width: 100%;
 }
 
 /* Labels for inputs */
-AddRepoDialog .dialog-content > Label {
+.dialog-content > Label {
     margin-bottom: 0;
+}
+
+/* Error message */
+#error-message {
+    color: $error;
+    height: auto;
+    min-height: 1;
 }
