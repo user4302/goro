@@ -44,24 +44,25 @@ class RepoDialog(ModalScreen[Union[Tuple[str, Path], Tuple[str, str, Path], None
     
     def compose(self) -> ComposeResult:
         """Create the dialog content."""
-        with Container():
-            yield Label(self.title, classes="dialog-header")
-            with Vertical(classes="dialog-content"):
-                yield Label("Name:")
-                yield Input(
-                    value=self.original_name,
-                    placeholder="Repository name", 
-                    id="repo-name"
-                )
-                yield Label("Path:")
-                yield Input(
-                    value=str(self.original_path),
-                    placeholder="Repository path", 
-                    id="repo-path"
-                )
-            with Horizontal(classes="dialog-buttons"):
-                yield Button("Cancel", variant="error", id="cancel-btn")
-                yield Button(self.button_text, variant="primary", id="save-btn")
+        with Container(classes="dialog-screen"):
+            with Container():
+                yield Label(self.title, classes="dialog-header")
+                with Vertical(classes="dialog-content"):
+                    yield Label("Name:")
+                    yield Input(
+                        value=self.original_name,
+                        placeholder="Repository name", 
+                        id="repo-name"
+                    )
+                    yield Label("Path:")
+                    yield Input(
+                        value=str(self.original_path),
+                        placeholder="Repository path", 
+                        id="repo-path"
+                    )
+                with Horizontal(classes="dialog-buttons"):
+                    yield Button("Cancel", variant="error", id="cancel-btn")
+                    yield Button(self.button_text, variant="primary", id="save-btn")
     
     def on_mount(self) -> None:
         """Focus the name input when dialog is mounted."""
