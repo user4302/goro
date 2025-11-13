@@ -53,18 +53,30 @@ class GRMApp(App):
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
         yield Header(show_clock=True, id="header")
-        yield RepoList(self.config.repos, id="repo-list")
+        
+        # Left side - Repository list with header
+        with Container(id="repo-container"):
+            yield Label("Repositories", classes="section-header")
+            yield RepoList(self.config.repos, id="repo-list")
+            
+        # Right side - Repository details
         yield RepoDetails(id="repo-details")
+        
+        # Status bar and footer
         yield StatusBar("Status: Ready", id="status-bar")
         yield Footer()
 
     def on_mount(self) -> None:
         """Handle app mount event."""
         self.title = "Git Repository Manager"
-        self.sub_title = "Manage all your Git repositories in one place"
+        self.sub_title = f"Managing {len(self.config.repos)} repositories"
         
-        # Select the first repository if available
+        # Initialize the repository list with all repositories
         if self.config.repos:
+            repo_list = self.query_one("#repo-list", RepoList)
+            repo_list.repos = self.config.repos
+            
+            # Select the first repository
             first_repo = next(iter(self.config.repos))
             self.selected_repo = first_repo
             details = self.query_one(RepoDetails)

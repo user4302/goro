@@ -26,10 +26,39 @@ Screen {
     margin-bottom: 1;
 }
 
-/* Repository list */
-.repo-list {
-    border: panel #666666;
+/* Repository list container */
+#repo-container {
+    width: 1fr;
     height: 100%;
+    border: panel #666666;
+    background: $panel;
+    overflow: hidden;
+}
+
+.section-header {
+    text-style: bold;
+    text-align: center;
+    padding: 1;
+    border-bottom: solid $accent;
+}
+
+#repo-list {
+    height: 1fr;
+    overflow-y: auto;
+    background: $panel;
+}
+
+#repo-list > ListItem {
+    height: 1;
+    padding: 0 1;
+}
+
+#repo-list > ListItem:hover {
+    background: $accent 10%;
+}
+
+#repo-list > ListItem.--highlight {
+    background: $accent 20%;
 }
 
 #repo-details {

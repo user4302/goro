@@ -9,14 +9,15 @@ from textual.widgets import Label, ListItem, ListView, Static
 from ..utils import safe_id
 
 
-class RepoList(Static):
+class RepoList(ListView):
     """Widget that displays a list of repositories."""
 
     repos = reactive(dict)
     selected_repo = reactive(str)
 
     def __init__(self, repos: Dict, **kwargs):
-        super().__init__(**kwargs)
+        # Initialize with empty list - we'll populate it in on_mount
+        super().__init__(*[], **kwargs)
         self._repos = dict(repos)  # Internal storage
         self.selected_repo = next(iter(repos), "")
         
@@ -26,58 +27,44 @@ class RepoList(Static):
         
     @repos.setter
     def repos(self, new_repos: Dict) -> None:
-        # Always update the internal state to match the config
+        # Update the internal state
         self._repos = dict(new_repos)
         
-        # Update the list view when repos change
-        if hasattr(self, '_list_view'):
-            # Store current selection if it still exists
-            current_selection = self.selected_repo if self.selected_repo in self._repos else (
-                next(iter(self._repos)) if self._repos else None
-            )
-            
-            # Clear and repopulate the list
-            self._list_view.clear()
-            
-            # Add all repositories to the list view
-            for name in sorted(self._repos.keys()):
-                item = ListItem(Label(name), id=safe_id(name))
-                self._list_view.append(item)
-            
-            # Update selection if needed
-            if current_selection and current_selection in self._repos:
-                self.selected_repo = current_selection
-                # Find and select the item in the list by name
-                for i, item in enumerate(self._list_view.children):
-                    if item.children and isinstance(item.children[0], Label):
-                        try:
-                            # Try to get text using render() method
-                            rendered = item.children[0].render()
-                            if hasattr(rendered, 'plain'):
-                                label_text = rendered.plain
-                            else:
-                                # Fallback to string representation
-                                label_text = str(rendered)
-                            
-                            if label_text == current_selection:
-                                self._list_view.index = i
-                                return
-                        except Exception:
-                            continue
-                # Notify about the selection change
-                self.post_message(self.Selected(self.selected_repo))
-
-    def compose(self) -> ComposeResult:
-        """Create child widgets for the repository list."""
-        with Static() as container:
-            yield Label("Repositories", classes="header")
-            with ListView(
-                *[ListItem(Label(name), id=safe_id(name)) for name in self._repos],
-                id="repo-list",
-                classes="repo-list",
-            ) as list_view:
-                self._list_view = list_view  # Store reference to update later
-                list_view.index = 0 if self._repos else None
+        # Store current selection if it still exists
+        current_selection = self.selected_repo if self.selected_repo in self._repos else (
+            next(iter(self._repos)) if self._repos else None
+        )
+        
+        # Clear and repopulate the list
+        self.clear()
+        
+        # Add all repositories to the list view
+        for name in sorted(self._repos.keys()):
+            item = ListItem(Label(name), id=safe_id(name))
+            self.append(item)
+        
+        # Update selection if needed
+        if current_selection and current_selection in self._repos:
+            self.selected_repo = current_selection
+            # Find and select the item in the list by name
+            for i, item in enumerate(self.children):
+                if item.children and isinstance(item.children[0], Label):
+                    try:
+                        # Try to get text using render() method
+                        rendered = item.children[0].render()
+                        if hasattr(rendered, 'plain'):
+                            label_text = rendered.plain
+                        else:
+                            # Fallback to string representation
+                            label_text = str(rendered)
+                        
+                        if label_text == current_selection:
+                            self.index = i
+                            return
+                    except Exception:
+                        continue
+            # Notify about the selection change
+            self.post_message(self.Selected(self.selected_repo))
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         """Handle repository selection."""
