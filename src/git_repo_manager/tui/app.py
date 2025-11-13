@@ -137,15 +137,8 @@ class GRMApp(App):
             self.notify("No repository selected", severity="warning")
             return
         
-        # Create confirmation dialog
-        dialog = ConfirmDialog(
-            f"Are you sure you want to remove '{self.selected_repo}'?",
-            confirm_text="Remove",
-            cancel_text="Cancel"
-        )
-        
-        def handle_confirm(event: ConfirmDialog.Confirmed) -> None:
-            if event.confirmed:
+        async def remove_repo(confirmed: bool) -> None:
+            if confirmed:
                 try:
                     # Remove the repository
                     repo_name = self.selected_repo
@@ -167,18 +160,22 @@ class GRMApp(App):
                 except Exception as e:
                     self.notify(f"Error removing repository: {str(e)}", severity="error")
         
-        # Subscribe to the Confirmed event
-        dialog.watch(dialog, "message_confirm", handle_confirm)
-        
-        # Show the dialog
-        self.mount(dialog)
+        # Show the dialog and wait for result
+        self.push_screen(
+            ConfirmDialog(
+                f"Are you sure you want to remove '{self.selected_repo}'?",
+                confirm_text="Remove",
+                cancel_text="Cancel"
+            ),
+            remove_repo
+        )
         
         # Focus the cancel button
         def set_focus_cancel():
             cancel_btn = self.query_one("#cancel-btn", Button)
             if cancel_btn:
                 cancel_btn.focus()
-        
+                
         self.call_after_refresh(set_focus_cancel)
 
     async def action_edit_repo(self) -> None:

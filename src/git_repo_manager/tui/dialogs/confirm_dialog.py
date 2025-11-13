@@ -3,17 +3,11 @@ from typing import Callable, Optional
 
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, Vertical
-from textual.message import Message
-from textual.widgets import Button, Label
+from textual.screen import ModalScreen
+from textual.widgets import Button, Label, Static
 
-class ConfirmDialog(Container):
+class ConfirmDialog(ModalScreen[bool]):
     """A simple confirmation dialog."""
-    
-    class Confirmed(Message):
-        """Message sent when the user confirms the action."""
-        def __init__(self, confirmed: bool):
-            self.confirmed = confirmed
-            super().__init__()
     
     def __init__(
         self,
@@ -29,11 +23,12 @@ class ConfirmDialog(Container):
     
     def compose(self) -> ComposeResult:
         """Create the dialog content."""
-        with Vertical():
-            yield Label(self.message)
-            with Horizontal():
-                yield Button(self.cancel_text, variant="error", id="cancel-btn")
-                yield Button(self.confirm_text, variant="primary", id="confirm-btn")
+        with Container():
+            with Vertical():
+                yield Label(self.message)
+                with Horizontal(classes="dialog-buttons"):
+                    yield Button(self.cancel_text, variant="error", id="cancel-btn")
+                    yield Button(self.confirm_text, variant="primary", id="confirm-btn")
     
     def on_mount(self) -> None:
         """Focus the cancel button when the dialog is mounted."""
