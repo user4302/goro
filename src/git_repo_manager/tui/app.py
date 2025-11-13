@@ -197,22 +197,25 @@ class GRMApp(App):
             return
         
         repo = self.config.repos[self.selected_repo]
-        dialog = EditRepoDialog(repo_name=self.selected_repo, repo_path=repo.path)
-        dialog.app = self  # Set the app reference
         
-        def handle_update(event: EditRepoDialog.Updated) -> None:
+        async def handle_dialog_result(result: tuple[str, str, Path] | None) -> None:
+            if not result:
+                return  # User cancelled
+                
+            old_name, new_name, new_path = result
+            
             try:
                 # If name changed, check for duplicates
-                if event.old_name != event.new_name and event.new_name in self.config.repos:
+                if old_name != new_name and new_name in self.config.repos:
                     self.notify(
-                        f"A repository with name '{event.new_name}' already exists",
+                        f"A repository with name '{new_name}' already exists",
                         severity="error"
                     )
                     return
                 
                 # Check for duplicate path
                 for repo_name, repo in self.config.repos.items():
-                    if repo_name != event.old_name and Path(repo.path).resolve() == event.new_path:
+                    if repo_name != old_name and Path(repo.path).resolve() == new_path:
                         self.notify(
                             f"A repository at this path already exists with name '{repo_name}'",
                             severity="error"
@@ -220,16 +223,16 @@ class GRMApp(App):
                         return
                 
                 # Remove the old repository if name changed
-                if event.old_name != event.new_name:
-                    self.config.remove_repo(event.old_name)
+                if old_name != new_name:
+                    self.config.remove_repo(old_name)
                 
                 # Add/update the repository
-                self.config.add_repo(event.new_name, str(event.new_path))
+                self.config.add_repo(new_name, str(new_path))
                 self.config.save()
                 
                 # Update UI
-                self.selected_repo = event.new_name
-                self.query_one(StatusBar).status = f"Updated repository: {event.new_name}"
+                self.selected_repo = new_name
+                self.query_one(StatusBar).status = f"Updated repository: {new_name}"
                 
                 # Refresh the repository list
                 repo_list = self.query_one("#repo-list", RepoList)
@@ -237,26 +240,16 @@ class GRMApp(App):
                 
                 # Select the updated repository
                 for i, item in enumerate(repo_list.children):
-                    if item.id == safe_id(event.new_name):
+                    if item.id == safe_id(new_name):
                         repo_list.index = i
                         break
                 
             except Exception as e:
                 self.notify(f"Error updating repository: {str(e)}", severity="error")
         
-        # Subscribe to the Updated event
-        dialog.watch(dialog, "message_confirm", handle_update)
-        
-        # Show the dialog
-        self.mount(dialog)
-        
-        # Focus the name input
-        def set_focus():
-            name_input = self.query_one("#repo-name", Input)
-            if name_input:
-                name_input.focus()
-        
-        self.call_after_refresh(set_focus)
+        # Create and show the dialog
+        dialog = EditRepoDialog(repo_name=self.selected_repo, repo_path=repo.path)
+        await self.push_screen(dialog, handle_dialog_result)
 
     async def action_sync_repo(self) -> None:
         """Sync the selected repository."""

@@ -1,13 +1,51 @@
 """Confirmation dialog for the Git Repository Manager TUI."""
-from typing import Callable, Optional
+from typing import Optional, Tuple, TypeVar, Generic, Type
+from pathlib import Path
 
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, Vertical
 from textual.screen import ModalScreen
-from textual.widgets import Button, Label, Static
+from textual.widgets import Button, Label, Input
 
 class ConfirmDialog(ModalScreen[bool]):
     """A simple confirmation dialog."""
+    
+    DEFAULT_CSS = """
+    ConfirmDialog {
+        align: center middle;
+    }
+    
+    ConfirmDialog > Container {
+        width: 80%;
+        height: auto;
+        max-width: 60;
+        background: $surface;
+        padding: 1 2;
+        border: panel $primary;
+        border-title-color: $text;
+    }
+    
+    ConfirmDialog .dialog-header {
+        width: 100%;
+        text-style: bold;
+        padding: 1 0;
+        border-bottom: solid $primary;
+        margin-bottom: 1;
+    }
+    
+    ConfirmDialog .dialog-content {
+        width: 100%;
+        height: auto;
+        margin: 1 0;
+    }
+    
+    ConfirmDialog .dialog-buttons {
+        width: 100%;
+        height: auto;
+        align: right middle;
+        margin-top: 1;
+    }
+    """
     
     def __init__(
         self,
@@ -24,11 +62,10 @@ class ConfirmDialog(ModalScreen[bool]):
     def compose(self) -> ComposeResult:
         """Create the dialog content."""
         with Container():
-            with Vertical():
-                yield Label(self.message)
-                with Horizontal(classes="dialog-buttons"):
-                    yield Button(self.cancel_text, variant="error", id="cancel-btn")
-                    yield Button(self.confirm_text, variant="primary", id="confirm-btn")
+            yield Label(self.message, classes="dialog-content")
+            with Horizontal(classes="dialog-buttons"):
+                yield Button(self.cancel_text, variant="error", id="cancel-btn")
+                yield Button(self.confirm_text, variant="primary", id="confirm-btn")
     
     def on_mount(self) -> None:
         """Focus the cancel button when the dialog is mounted."""
@@ -36,15 +73,14 @@ class ConfirmDialog(ModalScreen[bool]):
     
     def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button presses in the dialog."""
-        confirmed = event.button.id == "confirm-btn"
-        self.post_message(self.Confirmed(confirmed=confirmed))
-        self.remove()
+        if event.button.id == "confirm-btn":
+            self.dismiss(True)
+        else:
+            self.dismiss(False)
     
     async def on_key(self, event) -> None:
         """Handle key presses in the dialog."""
         if event.key == "enter":
-            self.post_message(self.Confirmed(confirmed=True))
-            self.remove()
+            self.dismiss(True)
         elif event.key == "escape":
-            self.post_message(self.Confirmed(confirmed=False))
-            self.remove()
+            self.dismiss(False)
