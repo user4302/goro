@@ -131,9 +131,9 @@ class GRMApp(App):
                 repo_list.repos = self.config.repos
                 
                 # Select the new repository
-                for i, item in enumerate(repo_list._list_view.children):
+                for i, item in enumerate(repo_list.children):
                     if item.id == safe_id(name):
-                        repo_list._list_view.index = i
+                        repo_list.index = i
                         break
                         
             except Exception as e:
@@ -236,9 +236,9 @@ class GRMApp(App):
                 repo_list.repos = self.config.repos
                 
                 # Select the updated repository
-                for i, item in enumerate(repo_list._list_view.children):
+                for i, item in enumerate(repo_list.children):
                     if item.id == safe_id(event.new_name):
-                        repo_list._list_view.index = i
+                        repo_list.index = i
                         break
                 
             except Exception as e:
