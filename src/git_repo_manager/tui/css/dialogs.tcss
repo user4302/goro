@@ -41,12 +41,12 @@ AddRepoDialog .dialog-buttons {
     margin-top: 2;
     width: 100%;
     align: right middle;
-    column-span: 2;
+    layout: horizontal;
 }
 
 /* Buttons */
-AddRepoDialog Button {
-    width: 1fr;
+AddRepoDialog .dialog-buttons > Button {
+    min-width: 8;
     margin-left: 1;
 }
 
