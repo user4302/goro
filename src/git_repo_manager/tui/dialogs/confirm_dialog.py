@@ -16,34 +16,36 @@ class ConfirmDialog(ModalScreen[bool]):
     }
     
     ConfirmDialog > Container {
-        width: 80%;
+        width: 90%;
         height: auto;
-        max-width: 60;
+        min-height: 10;
+        max-width: 80;
         background: $surface;
-        padding: 1 2;
+        padding: 2 3;
         border: panel $primary;
         border-title-color: $text;
-    }
-    
-    ConfirmDialog .dialog-header {
-        width: 100%;
-        text-style: bold;
-        padding: 1 0;
-        border-bottom: solid $primary;
-        margin-bottom: 1;
+        overflow-y: auto;
     }
     
     ConfirmDialog .dialog-content {
         width: 100%;
-        height: auto;
-        margin: 1 0;
+        min-height: 4;
+        margin: 2 0 3 0;
+        text-style: none;
     }
     
     ConfirmDialog .dialog-buttons {
         width: 100%;
         height: auto;
+        min-height: 3;
         align: right middle;
-        margin-top: 1;
+        margin-top: 2;
+        margin-bottom: 1;
+    }
+    
+    ConfirmDialog .dialog-buttons > Button {
+        min-width: 10;
+        margin-left: 1;
     }
     """
     
