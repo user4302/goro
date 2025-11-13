@@ -1,7 +1,23 @@
 """Main Textual application for Git Repository Manager."""
 
 from pathlib import Path
+import re
 from typing import Optional, Dict, List
+
+def is_valid_repo_name(name: str) -> bool:
+    """Check if a repository name is valid."""
+    # Only allow letters, numbers, spaces, underscores, and hyphens
+    return bool(re.match(r'^[\w\s-]+$', name))
+
+def safe_id(name: str) -> str:
+    """Generate a safe widget ID from a repository name."""
+    # Replace any non-alphanumeric character with an underscore
+    safe = re.sub(r'[^a-zA-Z0-9_-]', '_', name)
+    # Ensure the ID starts with a letter
+    if safe and safe[0].isdigit():
+        safe = f'repo_{safe}'
+    return f'repo-{safe}'
+
 from rich.panel import Panel
 from rich.table import Table
 from textual.app import App, ComposeResult
@@ -44,21 +60,56 @@ class RepoList(Static):
         
     @repos.setter
     def repos(self, new_repos: dict) -> None:
+        # Only update if the repositories have actually changed
+        if hasattr(self, '_repos') and self._repos == new_repos:
+            return
+            
         self._repos = dict(new_repos)
+        
         # Update the list view when repos change
         if hasattr(self, '_list_view'):
+            # Store current selection if it still exists
+            current_selection = self.selected_repo if self.selected_repo in self._repos else (
+                next(iter(self._repos)) if self._repos else None
+            )
+            
+            # Clear and repopulate the list
             self._list_view.clear()
+            
+            # Create a set to track added repository names
+            added_repos = set()
+            
             for name in self._repos:
-                self._list_view.append(ListItem(Label(name), id=f"repo-{name}"))
-            if self._repos and not self.selected_repo:
-                self.selected_repo = next(iter(self._repos))
+                # Skip if we've already added this repository
+                if name in added_repos:
+                    continue
+                    
+                # Create a safe ID for the list item
+                item_id = safe_id(name)
+                
+                # Only add if not already in the list
+                if not any(item.id == item_id for item in self._list_view.children):
+                    self._list_view.append(ListItem(Label(name), id=item_id))
+                    added_repos.add(name)
+            
+            # Update selection if needed
+            if current_selection != self.selected_repo:
+                self.selected_repo = current_selection
+                if self.selected_repo:
+                    # Find and select the item in the list
+                    for i, item in enumerate(self._list_view.children):
+                        if item.id == safe_id(self.selected_repo):
+                            self._list_view.index = i
+                            break
+                    # Notify about the selection change
+                    self.post_message(self.Selected(self.selected_repo))
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the repository list."""
         with Vertical():
             yield Label("Repositories", classes="header")
             with ListView(
-                *[ListItem(Label(name), id=f"repo-{name}") for name in self._repos],
+                *[ListItem(Label(name), id=safe_id(name)) for name in self._repos],
                 id="repo-list",
                 classes="repo-list",
             ) as list_view:
@@ -68,10 +119,14 @@ class RepoList(Static):
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         """Handle repository selection."""
         # Get the repository name from the ListItem id
-        repo_id = event.item.id
-        if repo_id and repo_id.startswith("repo-"):
-            self.selected_repo = repo_id[5:]  # Remove 'repo-' prefix
-            self.post_message(self.Selected(self.selected_repo))
+        if event.item and hasattr(event.item, 'id'):
+            # Find the repository name that matches this ID
+            for name in self._repos:
+                if safe_id(name) == event.item.id:
+                    self.selected_repo = name
+                    # Notify parent about the selection change
+                    self.post_message(self.Selected(name))
+                    break
 
     class Selected(Message):
         """Message sent when a repository is selected."""
@@ -261,6 +316,25 @@ class GRMApp(App):
                         yield Button("Cancel", variant="error", id="cancel-btn")
                         yield Button("Add", variant="primary", id="add-btn")
             
+            def _refresh_repos(self, selected_repo: str = None) -> None:
+                """Helper method to refresh the repository list and selection."""
+                repo_list = self.app.query_one("#repo-list", RepoList)
+                details = self.app.query_one(RepoDetails)
+                
+                # Update the repository list
+                repo_list.repos = dict(self.app.config.repos)
+                
+                # Update selection if provided
+                if selected_repo and selected_repo in self.app.config.repos:
+                    self.app.selected_repo = selected_repo
+                    details.repo = self.app.config.repos[selected_repo]
+                    
+                    # Find and select the item in the list
+                    for i, item in enumerate(repo_list._list_view.children):
+                        if item.id == f"repo-{selected_repo}":
+                            repo_list._list_view.index = i
+                            break
+            
             async def on_button_pressed(self, event: Button.Pressed) -> None:
                 """Handle button presses in the dialog."""
                 if event.button.id == "add-btn":
@@ -271,20 +345,32 @@ class GRMApp(App):
                     
                     if name and path:
                         try:
-                            # Add the repository to the config
-                            self.app.config.add_repo(name, Path(path).expanduser().resolve())
-                            self.app.config.save()
+                            path = Path(path).expanduser().resolve()
+                            if not path.exists():
+                                self.app.query_one(StatusBar).status = f"Error: Path does not exist - {path}"
+                                return
                             
-                            # Update the UI
-                            repo_list = self.app.query_one("#repo-list", RepoList)
-                            repo_list.repos = self.app.config.repos
-                            
-                            # Select the newly added repo
-                            self.app.selected_repo = name
-                            details = self.app.query_one(RepoDetails)
-                            details.update_repo(self.app.config.repos[name])
-                            
-                            self.app.query_one(StatusBar).status = f"Added repository: {name}"
+                            # Validate repository name
+                            if not is_valid_repo_name(name):
+                                self.app.query_one(StatusBar).status = "Error: Repository name can only contain letters, numbers, spaces, underscores, and hyphens"
+                                return
+                                
+                            try:
+                                # Add the repository to the config
+                                self.app.config.add_repo(name, path)
+                                self.app.config.save()
+                                
+                                # Refresh the entire UI
+                                repo_list = self.app.query_one("#repo-list", RepoList)
+                                details = self.app.query_one(RepoDetails)
+                                
+                                # Force a complete refresh of the repository list
+                                self.app.call_after_refresh(lambda: self._refresh_repos(name))
+                                
+                                # Update status
+                                self.app.query_one(StatusBar).status = f"Added repository: {name}"
+                            except Exception as e:
+                                self.app.query_one(StatusBar).status = f"Error adding repository: {str(e)}"
                         except Exception as e:
                             self.app.query_one(StatusBar).status = f"Error adding repository: {str(e)}"
                 
@@ -302,6 +388,34 @@ class GRMApp(App):
                 name_input.focus()
         
         self.call_after_refresh(set_focus)
+        
+    def _refresh_repos(self, selected_repo: str = None) -> None:
+        """Helper method to refresh the repository list and selection."""
+        repo_list = self.query_one("#repo-list", RepoList)
+        details = self.query_one(RepoDetails)
+        
+        # Make a copy of the current repos to ensure we trigger the setter
+        current_repos = dict(self.config.repos)
+        
+        # Update the repository list if it has changed
+        if repo_list.repos != current_repos:
+            repo_list.repos = current_repos
+        
+        # Update selection if provided
+        if selected_repo and selected_repo in self.config.repos:
+            self.selected_repo = selected_repo
+            details.repo = self.config.repos[selected_repo]
+            
+            # Ensure the list view is updated before trying to select
+            def select_item():
+                if hasattr(repo_list, '_list_view') and repo_list._list_view:
+                    for i, item in enumerate(repo_list._list_view.children):
+                        if item.id == f"repo-{selected_repo}":
+                            repo_list._list_view.index = i
+                            break
+            
+            # Schedule the selection update for the next event loop iteration
+            self.call_after_refresh(select_item)
 
     async def action_remove_repo(self) -> None:
         """Remove the selected repository."""
@@ -398,26 +512,36 @@ class GRMApp(App):
                     
                     if new_name and new_path:
                         try:
+                            path = Path(new_path).expanduser().resolve()
+                            if not path.exists():
+                                self.app.query_one(StatusBar).status = f"Error: Path does not exist - {path}"
+                                return
+                                
                             old_name = self.app.selected_repo
+                            old_repo = self.app.config.repos.get(old_name)
                             
-                            # If name changed, remove old entry and add new one
+                            # If name changed, remove old entry
                             if new_name != old_name:
                                 self.app.config.remove_repo(old_name)
-                                
+                            
                             # Add/update the repository
-                            self.app.config.add_repo(new_name, Path(new_path).expanduser().resolve())
-                            self.app.config.save()
+                            self.app.config.add_repo(new_name, path)
                             
-                            # Update the UI
-                            repo_list = self.app.query_one("#repo-list", RepoList)
-                            repo_list.repos = self.app.config.repos
-                            
-                            # Update selection
-                            self.app.selected_repo = new_name
-                            details = self.app.query_one(RepoDetails)
-                            details.update_repo(self.app.config.repos[new_name])
-                            
-                            self.app.query_one(StatusBar).status = f"Updated repository: {new_name}"
+                            try:
+                                self.app.config.save()
+                                
+                                # Force a complete refresh of the repository list
+                                self.app.call_after_refresh(lambda: self._refresh_repos(new_name))
+                                
+                                # Update status
+                                self.app.query_one(StatusBar).status = f"Updated repository: {new_name}"
+                            except Exception as e:
+                                # If save fails, try to restore the old repository
+                                if old_name and old_repo:
+                                    self.app.config.add_repo(old_name, old_repo.path)
+                                    self.app.config.save()
+                                    self.app.selected_repo = old_name
+                                raise e
                         except Exception as e:
                             self.app.query_one(StatusBar).status = f"Error updating repository: {str(e)}"
                 
