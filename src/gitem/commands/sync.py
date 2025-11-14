@@ -1,4 +1,4 @@
-"""Sync commands for Git Repository Manager."""
+"""Sync commands for Gitem."""
 
 import asyncio
 import subprocess
@@ -8,7 +8,7 @@ from typing import List, Optional, Tuple
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from app.config import Config
+from gitem.config import Config
 
 console = Console()
 

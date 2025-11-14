@@ -1,4 +1,4 @@
-# Git Repository Manager - Development Roadmap
+# Gitem - Development Roadmap
 
 ## Core Features
 

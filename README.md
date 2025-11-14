@@ -1,8 +1,13 @@
-# Git Repository Manager (v0.3.8)
+# Gitem (v0.4.0)
 
 A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
 
-## Features (v0.3.8)
+## Features (v0.4.0)
+
+- **Project Rename**
+  - Renamed project from 'app' to 'gitem' for better clarity
+  - Updated all internal imports and references
+  - Improved project structure and organization
 
 - **New Edit Command**
   - Added `grm edit <repo>` for interactive editing

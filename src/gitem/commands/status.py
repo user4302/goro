@@ -1,4 +1,4 @@
-"""Status commands for Git Repository Manager."""
+"""Status commands for Gitem."""
 
 import subprocess
 from pathlib import Path
@@ -7,7 +7,7 @@ from typing import Dict, Optional, Tuple
 from rich.console import Console
 from rich.table import Table
 
-from app.config import Config
+from gitem.config import Config
 
 console = Console()
 

@@ -1,4 +1,4 @@
-"""Repository list widget for the Git Repository Manager TUI."""
+"""Repository list widget for the Gitem TUI."""
 from __future__ import annotations
 from typing import Dict, Optional, TYPE_CHECKING
 
