@@ -1,6 +1,15 @@
-# Git Repository Manager (v0.3.7)
+# Git Repository Manager (v0.3.8)
 
 A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+
+## Features (v0.3.8)
+
+- **New Sync Commands**
+  - Added `grm sync <repo>` to sync a specific repository
+  - Added `grm sync-all` to sync all tracked repositories
+  - Async operations with progress indicators
+  - Case-insensitive repository name matching
+  - Improved output formatting and error handling
 
 ## Features (v0.3.7)
 
@@ -167,6 +176,12 @@ grm status my-repo
 
 # Show status of all repositories
 grm status-all
+
+# Sync a specific repository
+grm sync my-repo
+
+# Sync all repositories
+grm sync-all
 
 # Remove a repository
 grm remove my-repo

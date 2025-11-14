@@ -1,5 +1,6 @@
 """Command-line interface for Git Repository Manager."""
 
+import asyncio
 import sys
 from pathlib import Path
 from typing import List, Optional
@@ -9,6 +10,7 @@ from rich.console import Console
 from rich.table import Table
 
 from app.commands.status import status_repo, status_all
+from app.commands.sync import sync_repository, sync_all_repositories
 from app.config import Config, RepoConfig
 
 app = typer.Typer(name="grm", help="Git Repository Manager")
@@ -90,6 +92,29 @@ def status(name: Optional[str] = typer.Argument(None, help="Name of the reposito
 def status_all_cmd():
     """Show status of all tracked repositories."""
     status_all()
+
+
+@app.command()
+def sync(name: Optional[str] = typer.Argument(None, help="Name of the repository to sync")):
+    """Synchronize repositories.
+    
+    Args:
+        name: Optional repository name. If not provided, syncs all repositories.
+    """
+    if name:
+        # Handle case where name might be split into multiple arguments
+        if name not in Config.load().repos and len(sys.argv) > 3:
+            # Reconstruct the full name from remaining arguments
+            name = " ".join([name] + sys.argv[3:])
+        asyncio.run(sync_repository(name))
+    else:
+        asyncio.run(sync_all_repositories())
+
+
+@app.command("sync-all")
+def sync_all():
+    """Synchronize all tracked repositories."""
+    asyncio.run(sync_all_repositories())
 
 
 @app.command()
