@@ -162,6 +162,12 @@ grm add my-repo ~/projects/my-repo
 # List repositories
 grm list
 
+# Show status of a specific repository
+grm status my-repo
+
+# Show status of all repositories
+grm status-all
+
 # Remove a repository
 grm remove my-repo
 

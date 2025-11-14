@@ -1,12 +1,14 @@
 """Command-line interface for Git Repository Manager."""
 
+import sys
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 import typer
 from rich.console import Console
 from rich.table import Table
 
+from app.commands.status import status_repo, status_all
 from app.config import Config, RepoConfig
 
 app = typer.Typer(name="grm", help="Git Repository Manager")
@@ -65,6 +67,29 @@ def list_repos():
         table.add_row(name, str(repo.path), plugins)
 
     console.print(table)
+
+
+@app.command()
+def status(name: Optional[str] = typer.Argument(None, help="Name of the repository")):
+    """Show status of repositories.
+    
+    Args:
+        name: Optional repository name. If not provided, shows status of all repositories.
+    """
+    if name:
+        # Handle case where name might be split into multiple arguments
+        if name not in Config.load().repos and len(sys.argv) > 3:
+            # Reconstruct the full name from remaining arguments
+            name = " ".join([name] + sys.argv[3:])
+        status_repo(name)
+    else:
+        status_all()
+
+
+@app.command("status-all")
+def status_all_cmd():
+    """Show status of all tracked repositories."""
+    status_all()
 
 
 @app.command()
