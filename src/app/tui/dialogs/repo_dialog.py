@@ -48,13 +48,11 @@ class RepoDialog(ModalScreen[Union[Tuple[str, Path], Tuple[str, str, Path], None
             with Container():
                 yield Label(self.title, classes="dialog-header")
                 with Vertical(classes="dialog-content"):
-                    yield Label("Name:")
                     yield Input(
                         value=self.original_name,
                         placeholder="Repository name", 
                         id="repo-name"
                     )
-                    yield Label("Path:")
                     yield Input(
                         value=str(self.original_path),
                         placeholder="Repository path", 

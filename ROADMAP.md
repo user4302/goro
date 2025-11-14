@@ -32,9 +32,9 @@
 - [x] Sync all repositories
   - [x] Basic sync functionality
   - [x] Modal with live command output
-- [ ] Sync single repository
-  - [ ] Development
-  - [ ] Testing
+- [x] Sync single repository
+  - [x] Development
+  - [x] Testing
 
 ## Plugin System
 
