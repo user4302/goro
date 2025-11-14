@@ -1,6 +1,14 @@
-# Git Repository Manager (v0.3.3)
+# Git Repository Manager (v0.3.4)
 
 A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+
+## Features (v0.3.4)
+
+- Added 'Show Status' feature to view git status of selected repository
+  - Press 't' to show git status for the selected repository
+  - Displays detailed status information in a dialog
+  - Shows both staged and unstaged changes
+  - Includes branch information and working tree status
 
 ## Features (v0.3.3)
 

@@ -320,6 +320,49 @@ class GRMApp(App):
         status_bar = self.query_one("StatusBar")
         status_bar.rich_log.clear()
         status_bar.log("Logs cleared", "info")
+        
+    async def action_show_status(self) -> None:
+        """Show git status for the selected repository."""
+        if not self.selected_repo:
+            self.notify("No repository selected", severity="warning")
+            return
+            
+        repo_name = self.selected_repo
+        repo_path = Path(self.config.repos[repo_name].path)
+        
+        # Get the status bar instance for logging
+        status_bar = self.query_one("StatusBar")
+        status_bar.log(f"Checking status for {repo_name}...", "info")
+        
+        try:
+            # Run git status command
+            process = await asyncio.create_subprocess_shell(
+                "git status",
+                cwd=repo_path,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.STDOUT,
+                shell=True
+            )
+            
+            # Capture output
+            output = []
+            while True:
+                line = await process.stdout.readline()
+                if not line:
+                    break
+                output.append(line.decode().strip())
+                
+            # Wait for process to complete
+            await process.wait()
+            
+            # Show status in a dialog
+            status_output = "\n".join(output)
+            self.push_screen(StatusDialog(status_output, repo_name))
+            
+        except Exception as e:
+            error_msg = f"Error checking status: {str(e)}"
+            status_bar.log(error_msg, "error")
+            self.notify(error_msg, severity="error")
 
     def action_sync_all(self) -> None:
         """Sync all repositories."""
