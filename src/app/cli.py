@@ -11,6 +11,7 @@ from rich.table import Table
 
 from app.commands.status import status_repo, status_all
 from app.commands.sync import sync_repository, sync_all_repositories
+from app.commands.edit import edit_repository
 from app.config import Config, RepoConfig
 
 app = typer.Typer(name="grm", help="Git Repository Manager")
@@ -115,6 +116,43 @@ def sync(name: Optional[str] = typer.Argument(None, help="Name of the repository
 def sync_all():
     """Synchronize all tracked repositories."""
     asyncio.run(sync_all_repositories())
+
+
+@app.command()
+def edit(
+    name: str,
+    new_name: Optional[str] = typer.Option(
+        None, "--name", "-n", help="New name for the repository"
+    ),
+    path: Optional[str] = typer.Option(
+        None, "--path", "-p", help="New path for the repository"
+    ),
+    force: bool = typer.Option(
+        False, "--force", "-f", help="Skip confirmation prompts"
+    ),
+):
+    """Edit a repository's name and/or path.
+    
+    If no options are provided, enters interactive mode.
+    
+    Examples:
+        grm edit my-repo --name new-repo-name
+        grm edit my-repo --path /new/path
+        grm edit my-repo --name new-name --path /new/path
+        grm edit my-repo  # Interactive mode
+    """
+    # Handle case where name might be split into multiple arguments
+    if name not in Config.load().repos and len(sys.argv) > 3:
+        # Find where the name ends and options begin
+        name_parts = []
+        for i, arg in enumerate(sys.argv[2:], 2):
+            if arg.startswith('--'):
+                break
+            name_parts.append(arg)
+        if name_parts:
+            name = ' '.join(name_parts)
+    
+    edit_repository(name=name, new_name=new_name, path=path, force=force)
 
 
 @app.command()

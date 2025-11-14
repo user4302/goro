@@ -4,6 +4,13 @@ A TUI-based tool for managing multiple Git repositories in one place with an int
 
 ## Features (v0.3.8)
 
+- **New Edit Command**
+  - Added `grm edit <repo>` for interactive editing
+  - Support for renaming repositories with `--name`
+  - Update repository paths with `--path`
+  - Case-insensitive repository name matching
+  - Interactive confirmation prompts (can be skipped with `--force`)
+
 - **New Sync Commands**
   - Added `grm sync <repo>` to sync a specific repository
   - Added `grm sync-all` to sync all tracked repositories
@@ -182,6 +189,15 @@ grm sync my-repo
 
 # Sync all repositories
 grm sync-all
+
+# Edit a repository (interactive mode)
+grm edit my-repo
+
+# Rename a repository
+grm edit my-repo --name new-name
+
+# Update repository path
+grm edit my-repo --path /new/path
 
 # Remove a repository
 grm remove my-repo
