@@ -83,6 +83,14 @@ class SyncDialog(ModalScreen[None]):
     .success {
         color: $success;
     }
+    
+    .repo-header {
+        text-style: bold underline;
+        color: $accent;
+        margin: 1 0 0 0;
+        padding: 1 0;
+        border-bottom: solid $accent 30%;
+    }
     """
 
     def __init__(self, config: Dict, *args, **kwargs) -> None:
@@ -130,6 +138,9 @@ class SyncDialog(ModalScreen[None]):
             repo_name: Name of the repository
             repo_path: Path to the repository
         """
+        # Display repository name prominently
+        await self.append_output(f"{repo_name}", "repo-header")
+        
         commands = [
             ("git add .", "Adding changes"),
             ("git pull --rebase", "Pulling latest changes"),
