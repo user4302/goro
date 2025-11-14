@@ -143,7 +143,7 @@ class SyncDialog(ModalScreen[None]):
         
         commands = [
             ("git add .", "Adding changes"),
-            ("git pull --rebase", "Pulling latest changes"),
+            ("git pull", "Pulling latest changes"),
             ("git push", "Pushing changes")
         ]
         
