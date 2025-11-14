@@ -1,8 +1,15 @@
-# Gitem (v0.4.0)
+# Gitem (v0.4.1)
 
 **Git** **E**nhanced **M**anager - A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
 
 > **Note**: The name "Gitem" is a playful derivation of "get 'em" (as in "get them"), combined with "Git" - because it helps you "get 'em" (manage) all your Git repositories in one place.
+
+## Features (v0.4.1)
+
+- **Improved CLI Experience**
+  - Launch TUI by default when running `gitem` without arguments
+  - Maintained backward compatibility with `gitem ui`
+  - More intuitive command structure
 
 ## Features (v0.4.0)
 
@@ -212,7 +219,7 @@ gitem edit my-repo --path /new/path
 gitem remove my-repo
 
 # Launch TUI
-gitem ui
+gitem  # or 'gitem ui' for explicit TUI launch
 ```
 
 ### TUI Controls

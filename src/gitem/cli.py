@@ -27,14 +27,21 @@ def version_callback(value: bool):
         raise typer.Exit()
 
 
-@app.callback()
+@app.callback(invoke_without_command=True)
 def main(
     version: bool = typer.Option(
         None, "--version", "-v", callback=version_callback, is_eager=True
     ),
+    ctx: typer.Context = typer.Context,
 ):
-    """Gitem - A TUI-based tool for managing multiple Git repositories."""
-    pass
+    """Gitem - A TUI-based tool for managing multiple Git repositories.
+    
+    When no command is provided, launches the interactive TUI interface.
+    """
+    if ctx.invoked_subcommand is None:
+        from gitem.tui.app import GRMApp
+        app = GRMApp()
+        app.run()
 
 
 @app.command()
