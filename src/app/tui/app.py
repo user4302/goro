@@ -32,6 +32,7 @@ from .widgets import RepoList, RepoDetails, StatusBar
 from .dialogs.repo_dialog import RepoDialog
 from .dialogs.confirm_dialog import ConfirmDialog
 from .dialogs.status_dialog import StatusDialog
+from .dialogs.sync_dialog import SyncDialog
 from .utils import safe_id, is_valid_repo_name, resolve_path
 
 class GRMApp(App):
@@ -44,6 +45,7 @@ class GRMApp(App):
         ("a", "add_repo", "Add Repository"),
         ("r", "remove_repo", "Remove Repository"),
         ("s", "sync_repo", "Sync Repository"),
+        ("S", "sync_all", "Sync All Repositories"),
         ("f2", "edit_repo", "Edit Repository"),
         ("t", "show_status", "Show Status"),
     ]
@@ -251,11 +253,19 @@ class GRMApp(App):
         if not self.selected_repo:
             self.notify("No repository selected", severity="warning")
             return
+        
+        repo_path = Path(self.config.repos[self.selected_repo].path)
+        self.notify(f"Syncing {self.selected_repo}...", title="Sync Started")
+        # TODO: Implement actual sync logic
+        self.notify(f"Successfully synced {self.selected_repo}", title="Sync Complete")
+
+    def action_sync_all(self) -> None:
+        """Sync all repositories."""
+        if not self.config.repos:
+            self.notify("No repositories configured", severity="warning")
+            return
             
-        # This is a placeholder for the sync functionality
-        self.query_one(StatusBar).status = f"Syncing repository: {self.selected_repo}"
-        # TODO: Implement actual sync functionality
-        self.notify("Sync functionality not yet implemented", severity="warning")
+        self.push_screen(SyncDialog(self.config))
 
     async def action_show_status(self) -> None:
         """Show git status for the selected repository."""

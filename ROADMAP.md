@@ -29,9 +29,9 @@
 - [ ] Edit global git config
   - [ ] Development
   - [ ] Testing
-- [ ] Sync all repositories
-  - [ ] Development
-  - [ ] Testing
+- [x] Sync all repositories
+  - [x] Basic sync functionality
+  - [x] Modal with live command output
 - [ ] Sync single repository
   - [ ] Development
   - [ ] Testing
@@ -81,7 +81,7 @@
 
 ## Future Improvements
 
-### Visual Indicators
+### Git Status
 - [ ] **Live Status Indicators**
   - [ ] Add colored circles before each repository name
   - [ ] Green: Up-to-date
@@ -90,6 +90,14 @@
   - [ ] Blue: Behind remote
   - [ ] Click to show detailed status
   - [ ] Hover tooltip with status summary
+
+### Sync all 
+- [ ] repositories Overview
+  - [ ] Summary view after sync completion
+  - [ ] Warning/error indicators in summary
+  - [ ] Clickable warnings for detailed error view
+  - [ ] Progress indicators
+  - [ ] Pause/resume functionality
 
 ---
 *Last updated: November 14, 2025*
