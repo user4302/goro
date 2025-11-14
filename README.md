@@ -1,6 +1,8 @@
 # Gitem (v0.4.0)
 
-A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+**Git** **E**nhanced **M**anager - A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+
+> **Note**: The name "Gitem" is a playful derivation of "get 'em" (as in "get them"), combined with "Git" - because it helps you "get 'em" (manage) all your Git repositories in one place.
 
 ## Features (v0.4.0)
 
@@ -9,16 +11,18 @@ A TUI-based tool for managing multiple Git repositories in one place with an int
   - Updated all internal imports and references
   - Improved project structure and organization
 
+## Features (v0.3.8)
+
 - **New Edit Command**
-  - Added `grm edit <repo>` for interactive editing
+  - Added `gitem edit <repo>` for interactive editing
   - Support for renaming repositories with `--name`
   - Update repository paths with `--path`
   - Case-insensitive repository name matching
   - Interactive confirmation prompts (can be skipped with `--force`)
 
 - **New Sync Commands**
-  - Added `grm sync <repo>` to sync a specific repository
-  - Added `grm sync-all` to sync all tracked repositories
+  - Added `gitem sync <repo>` to sync a specific repository
+  - Added `gitem sync-all` to sync all tracked repositories
   - Async operations with progress indicators
   - Case-insensitive repository name matching
   - Improved output formatting and error handling
@@ -175,74 +179,52 @@ pip install -e ".[dev]"
 
 ```bash
 # Initialize configuration
-grm init
+gitem init
 
 # Add a repository
-grm add my-repo ~/projects/my-repo
+gitem add my-repo ~/projects/my-repo
 
 # List repositories
-grm list
+gitem list
 
 # Show status of a specific repository
-grm status my-repo
+gitem status my-repo
 
 # Show status of all repositories
-grm status-all
+gitem status-all
 
 # Sync a specific repository
-grm sync my-repo
+gitem sync my-repo
 
 # Sync all repositories
-grm sync-all
+gitem sync-all
 
 # Edit a repository (interactive mode)
-grm edit my-repo
+gitem edit my-repo
 
 # Rename a repository
-grm edit my-repo --name new-name
+gitem edit my-repo --name new-name
 
 # Update repository path
-grm edit my-repo --path /new/path
+gitem edit my-repo --path /new/path
 
 # Remove a repository
-grm remove my-repo
+gitem remove my-repo
 
 # Launch TUI
-grm ui
+gitem ui
 ```
 
 ### TUI Controls
 
 - `a`: Add repository
 - `r`: Remove repository
-- `s`: Sync repository
+- `s`: Sync current repository
+- `S` (Shift+s): Sync all repositories
 - `F2`: Edit repository
+- `t`: Show git status
+- `c`: Clear status logs
 - `q`: Quit
-
-## Development
-
-### Setup
-
-1. Clone the repository
-2. Set up the development environment as shown in the Installation section
-3. Install pre-commit hooks:
-   ```bash
-   pre-commit install
-   ```
-
-### Running Tests
-
-```bash
-pytest
-```
-
-### Building
-
-```bash
-# Build the package
-uv pip install build
-python -m build
-```
 
 ## License
 
