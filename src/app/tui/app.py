@@ -31,6 +31,7 @@ from app.config import Config, RepoConfig
 from .widgets import RepoList, RepoDetails, StatusBar
 from .dialogs.repo_dialog import RepoDialog
 from .dialogs.confirm_dialog import ConfirmDialog
+from .dialogs.status_dialog import StatusDialog
 from .utils import safe_id, is_valid_repo_name, resolve_path
 
 class GRMApp(App):
@@ -44,6 +45,7 @@ class GRMApp(App):
         ("r", "remove_repo", "Remove Repository"),
         ("s", "sync_repo", "Sync Repository"),
         ("f2", "edit_repo", "Edit Repository"),
+        ("t", "show_status", "Show Status"),
     ]
 
     def __init__(self):
@@ -254,3 +256,31 @@ class GRMApp(App):
         self.query_one(StatusBar).status = f"Syncing repository: {self.selected_repo}"
         # TODO: Implement actual sync functionality
         self.notify("Sync functionality not yet implemented", severity="warning")
+
+    async def action_show_status(self) -> None:
+        """Show git status for the selected repository."""
+        if not self.selected_repo:
+            self.notify("No repository selected", severity="warning")
+            return
+            
+        repo_path = Path(self.config.repos[self.selected_repo].path)
+        self.query_one(StatusBar).status = f"Checking status of {self.selected_repo}..."
+        
+        try:
+            # Run git status command
+            import subprocess
+            result = subprocess.run(
+                ["git", "status"],
+                cwd=repo_path,
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            status_output = result.stdout
+        except subprocess.CalledProcessError as e:
+            status_output = f"Error getting status: {e.stderr or e}"
+        except Exception as e:
+            status_output = f"Unexpected error: {str(e)}"
+        
+        # Show status in a dialog
+        self.push_screen(StatusDialog(status_output))

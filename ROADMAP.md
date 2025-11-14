@@ -20,12 +20,6 @@
   - [ ] Testing
 
 ### Git Operations
-- [ ] Sync all repositories
-  - [ ] Development
-  - [ ] Testing
-- [ ] Sync single repository
-  - [ ] Development
-  - [ ] Testing
 - [ ] Check repository status
   - [ ] Development
   - [ ] Testing
@@ -33,6 +27,12 @@
   - [ ] Development
   - [ ] Testing
 - [ ] Edit global git config
+  - [ ] Development
+  - [ ] Testing
+- [ ] Sync all repositories
+  - [ ] Development
+  - [ ] Testing
+- [ ] Sync single repository
   - [ ] Development
   - [ ] Testing
 
