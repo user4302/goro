@@ -41,7 +41,7 @@ class SyncDialog(ModalScreen[None]):
         width: 100%;
         height: 1fr;
         overflow: auto;
-        margin: 1 0;
+        margin: 0 0;
         padding: 1;
         background: $panel;
         border: panel $panel-lighten-2;
@@ -68,11 +68,11 @@ class SyncDialog(ModalScreen[None]):
     
     .command {
         color: $text-muted;
-        margin: 1 0 1 0;  /* top right bottom left - using integers only */
+        margin: 0 0 0 0;  /* top right bottom left - using integers only */
     }
     
     .command-output {
-        margin: 0 0 1 2;
+        margin: 0 0 0 2;
         color: $text;
     }
     
@@ -189,13 +189,8 @@ class SyncDialog(ModalScreen[None]):
             
             # Wait for process to complete
             await process.wait()
-            
-            if process.returncode != 0:
-                error_msg = "\n".join(output)
-                await self.append_output(f"Error: Command failed with code {process.returncode}", "error")
-                return False, error_msg
                 
-            return True, "\n".join(output)
+            return True, output
             
         except Exception as e:
             error_msg = f"Error running command: {str(e)}"
