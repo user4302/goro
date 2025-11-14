@@ -79,5 +79,17 @@
   - [ ] Development
   - [ ] Testing
 
+## Future Improvements
+
+### Visual Indicators
+- [ ] **Live Status Indicators**
+  - [ ] Add colored circles before each repository name
+  - [ ] Green: Up-to-date
+  - [ ] Yellow: Uncommitted changes
+  - [ ] Red: Unpushed commits or diverged from remote
+  - [ ] Blue: Behind remote
+  - [ ] Click to show detailed status
+  - [ ] Hover tooltip with status summary
+
 ---
 *Last updated: November 14, 2025*
