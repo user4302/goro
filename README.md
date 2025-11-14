@@ -1,6 +1,13 @@
-# Git Repository Manager (v0.2.6)
+# Git Repository Manager (v0.2.7)
 
 A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+
+## Features (v0.2.7)
+
+- Refactored project structure for better organization
+- Renamed main module from `git_repo_manager` to `app`
+- Updated all imports and configurations to reflect the new structure
+- Fixed version display in the CLI
 
 ## Features (v0.2.6)
 
