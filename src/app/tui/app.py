@@ -298,13 +298,6 @@ class GRMApp(App):
                 # Wait for process to complete
                 await process.wait()
                 
-                # Check for errors
-                if process.returncode != 0:
-                    error_msg = "\n".join(output[-5:])  # Show last 5 lines of error
-                    status_bar.log(f"Error: {error_msg}", "error")
-                    self.notify(f"Failed to sync {repo_name}", severity="error")
-                    return
-                    
             except Exception as e:
                 error_msg = f"Error running '{cmd}': {str(e)}"
                 status_bar.log(error_msg, "error")
