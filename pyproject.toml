@@ -4,7 +4,6 @@ build-backend = "hatchling.build"
 
 [project]
 name = "git-repo-manager"
-version = "0.1.0"
 description = "A TUI-based Git repository manager"
 authors = [
     { name = "Your Name", email = "your.email@example.com" },

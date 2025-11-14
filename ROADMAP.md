@@ -20,9 +20,9 @@
   - [ ] Testing
 
 ### Git Operations
-- [ ] Check repository status
-  - [ ] Development
-  - [ ] Testing
+- [x] Check repository status
+  - [x] Development
+  - [x] Testing
 - [ ] Edit local git config
   - [ ] Development
   - [ ] Testing

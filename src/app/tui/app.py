@@ -282,5 +282,5 @@ class GRMApp(App):
         except Exception as e:
             status_output = f"Unexpected error: {str(e)}"
         
-        # Show status in a dialog
-        self.push_screen(StatusDialog(status_output))
+        # Show status in a dialog with the repository name
+        self.push_screen(StatusDialog(status_output, repo_name=self.selected_repo))
