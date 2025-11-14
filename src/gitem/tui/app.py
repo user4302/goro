@@ -1,4 +1,4 @@
-"""Main Textual application for Git Repository Manager."""
+"""Main Textual application for Gitem."""
 
 from pathlib import Path
 from typing import Optional, Dict, Any, List
@@ -25,16 +25,20 @@ from textual.widgets import (
     Tabs,
 )
 
-from app.config import Config, RepoConfig
+from gitem.config import Config, RepoConfig
 
 # Import widgets and dialogs
 from .widgets import RepoList, RepoDetails, StatusBar
 from .dialogs.repo_dialog import RepoDialog
 from .dialogs.confirm_dialog import ConfirmDialog
+from .dialogs.status_dialog import StatusDialog
+from .dialogs.sync_dialog import SyncDialog
 from .utils import safe_id, is_valid_repo_name, resolve_path
+import asyncio
+from pathlib import Path
 
 class GRMApp(App):
-    """Git Repository Manager Textual Application."""
+    """Gitem Textual Application."""
 
     CSS_PATH = "css/global.css"
 
@@ -43,7 +47,10 @@ class GRMApp(App):
         ("a", "add_repo", "Add Repository"),
         ("r", "remove_repo", "Remove Repository"),
         ("s", "sync_repo", "Sync Repository"),
+        ("S", "sync_all", "Sync All Repositories"),
         ("f2", "edit_repo", "Edit Repository"),
+        ("t", "show_status", "Show Status"),
+        ("c", "clear_logs", "Clear Logs"),
     ]
 
     def __init__(self):
@@ -52,7 +59,7 @@ class GRMApp(App):
         self.selected_repo = None
 
     def compose(self) -> ComposeResult:
-        """Create child widgets for the app."""
+        """Create child widgets for the gitem."""
         # Main app container with grid layout
         with Container(classes="main-app"):
             yield Header(show_clock=True, id="header")
@@ -75,7 +82,7 @@ class GRMApp(App):
 
     def on_mount(self) -> None:
         """Handle app mount event."""
-        self.title = "Git Repository Manager"
+        self.title = "Gitem"
         self.sub_title = f"Managing {len(self.config.repos)} repositories"
         
         # Initialize the repository list with all repositories
@@ -245,12 +252,115 @@ class GRMApp(App):
         )
 
     async def action_sync_repo(self) -> None:
-        """Sync the selected repository."""
+        """Sync the selected repository with detailed logging."""
+        if not self.selected_repo:
+            self.notify("No repository selected", severity="warning")
+            return
+        
+        repo_name = self.selected_repo
+        repo_path = Path(self.config.repos[repo_name].path)
+        
+        # Get the status bar instance
+        status_bar = self.query_one("StatusBar")
+        status_bar.log(f"Starting sync for {repo_name}...", "info")
+        
+        # Define git commands to run
+        commands = [
+            ("git add .", "Adding changes"),
+            ('git commit -m "gitem Sync: Auto-commit by Gitem" --allow-empty-message', "Committing changes"),
+            ("git pull", "Pulling latest changes"),
+            ("git push", "Pushing changes")
+        ]
+        
+        for cmd, description in commands:
+            status_bar.log(f"{description}...", "info")
+            try:
+                # Run the command
+                process = await asyncio.create_subprocess_shell(
+                    cmd,
+                    cwd=repo_path,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.STDOUT,
+                    shell=True
+                )
+                
+                # Capture and log output
+                output = []
+                while True:
+                    line = await process.stdout.readline()
+                    if not line:
+                        break
+                    line = line.decode().strip()
+                    if line:  # Only log non-empty lines
+                        output.append(line)
+                        status_bar.log(f"  {line}", "debug")
+                
+                # Wait for process to complete
+                await process.wait()
+                
+            except Exception as e:
+                error_msg = f"Error running '{cmd}': {str(e)}"
+                status_bar.log(error_msg, "error")
+                self.notify(error_msg, severity="error")
+                return
+        
+        # Success
+        status_bar.log(f"Successfully synced {repo_name}", "success")
+        self.notify(f"Successfully synced {repo_name}", title="Sync Complete")
+
+    def action_clear_logs(self) -> None:
+        """Clear the status bar logs."""
+        status_bar = self.query_one("StatusBar")
+        status_bar.rich_log.clear()
+        status_bar.log("Logs cleared", "info")
+        
+    async def action_show_status(self) -> None:
+        """Show git status for the selected repository."""
         if not self.selected_repo:
             self.notify("No repository selected", severity="warning")
             return
             
-        # This is a placeholder for the sync functionality
-        self.query_one(StatusBar).status = f"Syncing repository: {self.selected_repo}"
-        # TODO: Implement actual sync functionality
-        self.notify("Sync functionality not yet implemented", severity="warning")
+        repo_name = self.selected_repo
+        repo_path = Path(self.config.repos[repo_name].path)
+        
+        # Get the status bar instance for logging
+        status_bar = self.query_one("StatusBar")
+        status_bar.log(f"Checking status for {repo_name}...", "info")
+        
+        try:
+            # Run git status command
+            process = await asyncio.create_subprocess_shell(
+                "git status",
+                cwd=repo_path,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.STDOUT,
+                shell=True
+            )
+            
+            # Capture output
+            output = []
+            while True:
+                line = await process.stdout.readline()
+                if not line:
+                    break
+                output.append(line.decode().strip())
+                
+            # Wait for process to complete
+            await process.wait()
+            
+            # Show status in a dialog
+            status_output = "\n".join(output)
+            self.push_screen(StatusDialog(status_output, repo_name))
+            
+        except Exception as e:
+            error_msg = f"Error checking status: {str(e)}"
+            status_bar.log(error_msg, "error")
+            self.notify(error_msg, severity="error")
+
+    def action_sync_all(self) -> None:
+        """Sync all repositories."""
+        if not self.config.repos:
+            self.notify("No repositories configured", severity="warning")
+            return
+            
+        self.push_screen(SyncDialog(self.config))

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "git-repo-manager"
+name = "gitem"
 version = "0.1.0"
 description = "A TUI-based Git repository manager"
 authors = [
@@ -38,13 +38,10 @@ dev = [
 ]
 
 [tool.hatch.build]
-packages = ["src/app"]
-
-[tool.hatch.version]
-path = "src/app/__init__.py"
+packages = ["src/gitem"]
 
 [project.scripts]
-grm = "app.cli:app"
+gitem = "gitem.cli:app"
 
 [tool.black]
 line-length = 88

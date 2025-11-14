@@ -1,6 +1,105 @@
-# Git Repository Manager (v0.2.6)
+# Gitem (v0.4.0)
 
-A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+**Git** **E**nhanced **M**anager - A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+
+> **Note**: The name "Gitem" is a playful derivation of "get 'em" (as in "get them"), combined with "Git" - because it helps you "get 'em" (manage) all your Git repositories in one place.
+
+## Features (v0.4.0)
+
+- **Project Rename**
+  - Renamed project from 'app' to 'gitem' for better clarity
+  - Updated all internal imports and references
+  - Improved project structure and organization
+
+## Features (v0.3.8)
+
+- **New Edit Command**
+  - Added `gitem edit <repo>` for interactive editing
+  - Support for renaming repositories with `--name`
+  - Update repository paths with `--path`
+  - Case-insensitive repository name matching
+  - Interactive confirmation prompts (can be skipped with `--force`)
+
+- **New Sync Commands**
+  - Added `gitem sync <repo>` to sync a specific repository
+  - Added `gitem sync-all` to sync all tracked repositories
+  - Async operations with progress indicators
+  - Case-insensitive repository name matching
+  - Improved output formatting and error handling
+
+## Features (v0.3.7)
+
+- **Sync Dialog Improvements**
+  - Simplified command output handling
+  - Removed redundant error checking for cleaner output
+  - Adjusted margins and spacing for better readability
+  - More consistent command output formatting
+
+## Features (v0.3.6)
+
+- **UI Improvements**
+  - Streamlined repository dialog with cleaner input fields
+  - Removed redundant labels in favor of placeholders
+  - Improved visual hierarchy in form elements
+
+## Features (v0.3.5)
+
+- Improved error handling in repository sync
+  - Removed redundant error checking that could cause false negatives
+  - Streamlined error reporting for better user experience
+  - More reliable sync operation completion detection
+
+## Features (v0.3.4)
+
+- Added 'Show Status' feature to view git status of selected repository
+  - Press 't' to show git status for the selected repository
+  - Displays detailed status information in a dialog
+  - Shows both staged and unstaged changes
+  - Includes branch information and working tree status
+
+## Features (v0.3.3)
+
+- Added commit step to sync all repositories flow
+- Consistent behavior between single and multiple repository sync
+
+## Features (v0.3.2)
+
+- Added automatic commit during sync operations
+- Fixed command syntax for better compatibility
+
+## Features (v0.3.1)
+
+- Enhanced single repository sync with detailed status bar logging
+- Real-time output of git commands (add, pull, push)
+- Added clear logs functionality with 'c' key binding
+- Improved error handling and user feedback
+
+## Features (v0.3.0)
+
+- Added sync all repositories feature with live command output
+- New modal dialog showing real-time git command execution
+- Automatic git add, pull, and push for all repositories
+- Progress tracking and error handling
+
+## Features (v0.2.9)
+
+- Fixed status dialog layout and close button visibility
+- Improved dialog styling to match application theme
+- Enhanced button positioning and interaction
+
+## Features (v0.2.8)
+
+- Added compact status dialog for repository status checks
+- Improved dialog styling and layout
+- Added keyboard shortcuts for better accessibility
+- Enhanced error handling for git operations
+
+## Features (v0.2.7)
+
+- Refactored project structure for better organization
+- Renamed main module from `git_repo_manager` to `app`
+- Updated all imports and configurations to reflect the new structure
+- Fixed version display in the CLI
 
 ## Features (v0.2.6)
 
@@ -80,53 +179,52 @@ pip install -e ".[dev]"
 
 ```bash
 # Initialize configuration
-grm init
+gitem init
 
 # Add a repository
-grm add my-repo ~/projects/my-repo
+gitem add my-repo ~/projects/my-repo
 
 # List repositories
-grm list
+gitem list
+
+# Show status of a specific repository
+gitem status my-repo
+
+# Show status of all repositories
+gitem status-all
+
+# Sync a specific repository
+gitem sync my-repo
+
+# Sync all repositories
+gitem sync-all
+
+# Edit a repository (interactive mode)
+gitem edit my-repo
+
+# Rename a repository
+gitem edit my-repo --name new-name
+
+# Update repository path
+gitem edit my-repo --path /new/path
 
 # Remove a repository
-grm remove my-repo
+gitem remove my-repo
 
 # Launch TUI
-grm ui
+gitem ui
 ```
 
 ### TUI Controls
 
 - `a`: Add repository
 - `r`: Remove repository
-- `s`: Sync repository
+- `s`: Sync current repository
+- `S` (Shift+s): Sync all repositories
 - `F2`: Edit repository
+- `t`: Show git status
+- `c`: Clear status logs
 - `q`: Quit
-
-## Development
-
-### Setup
-
-1. Clone the repository
-2. Set up the development environment as shown in the Installation section
-3. Install pre-commit hooks:
-   ```bash
-   pre-commit install
-   ```
-
-### Running Tests
-
-```bash
-pytest
-```
-
-### Building
-
-```bash
-# Build the package
-uv pip install build
-python -m build
-```
 
 ## License
 
