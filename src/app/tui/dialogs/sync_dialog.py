@@ -143,6 +143,7 @@ class SyncDialog(ModalScreen[None]):
         
         commands = [
             ("git add .", "Adding changes"),
+            ('git commit -m "GRM Sync: Auto-commit by Git Repository Manager" --allow-empty-message', "Committing changes"),
             ("git pull", "Pulling latest changes"),
             ("git push", "Pushing changes")
         ]
