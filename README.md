@@ -1,6 +1,13 @@
-# Git Repository Manager (v0.3.0)
+# Git Repository Manager (v0.3.1)
 
 A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+
+## Features (v0.3.1)
+
+- Enhanced single repository sync with detailed status bar logging
+- Real-time output of git commands (add, pull, push)
+- Added clear logs functionality with 'c' key binding
+- Improved error handling and user feedback
 
 ## Features (v0.3.0)
 
