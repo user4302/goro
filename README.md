@@ -20,8 +20,7 @@ goro                      # launches the interactive TUI instantly
 
 ### Core Features
 
-- Auto-discover all Git repositories in a folder
-- Bulk sync (`add → commit → pull → push`) for selected or all repos
+- Manually add any repository path (even weird ones like %APPDATA%, client folders, external drives…)- Bulk sync (`add → commit → pull → push`) for selected or all repos
 - Live status grid with branch, ahead/behind, and dirty indicators
 - Add, edit, rename, and remove repositories interactively
 - Real-time command output with progress bars
@@ -40,9 +39,20 @@ goro                      # launches the interactive TUI instantly
 | `q`       | Quit                       |
 
 ### Full CLI Reference & Changelog
-→ https://gitlab.com/user4302_Projects/coding/python/textual/goro
+→ https://gitlab.com/user4302_Projects/coding/python/textual/goro/-/blob/main/CHANGELOG.md
+
+### Project Homes
+
+| Platform   | Purpose                                  | Link                                                                      |
+|------------|-------------------------------------------|---------------------------------------------------------------------------|
+| **GitLab** | Source of truth • Issues • MRs • CI/CD    | https://gitlab.com/user4302_Projects/coding/python/textual/goro           |
+| **GitHub** | Mirror for discoverability & extra stars  | https://github.com/YOUR_GITHUB_USERNAME/goro                              |
+
+> **Please file issues and feature requests on GitLab** — that’s where I actively track and fix everything.  
+> GitHub mirror is kept in sync automatically.
 
 **License** — MIT  
-**Built with** — Textual • Python 3.8+
+**Built with** — Textual • Typer • uv • Hatch • Python 3.8+
 
-Star on GitLab if you like it! ★
+⭐ **Star on whichever platform you prefer** — every star helps!  
+(If you star both, I won’t complain 😉)
