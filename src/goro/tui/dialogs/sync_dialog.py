@@ -143,7 +143,7 @@ class SyncDialog(ModalScreen[None]):
         
         commands = [
             ("git add .", "Adding changes"),
-            ('git commit -m "gitem Sync: Auto-commit by Gitem" --allow-empty-message', "Committing changes"),
+            ('git commit -m "goro Sync: Auto-commit by GORO" --allow-empty-message', "Committing changes"),
             ("git pull", "Pulling latest changes"),
             ("git push", "Pushing changes")
         ]

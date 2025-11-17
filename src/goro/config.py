@@ -1,4 +1,4 @@
-"""Configuration management for Gitem."""
+"""Configuration management for GORO."""
 
 import json
 from dataclasses import asdict, dataclass, field
@@ -45,7 +45,7 @@ class Config(BaseModel):
     @classmethod
     def get_config_path(cls) -> Path:
         """Get the path to the configuration file."""
-        config_dir = Path.home() / ".config" / "gitem"
+        config_dir = Path.home() / ".config" / "goro"
         config_dir.mkdir(parents=True, exist_ok=True)
         return config_dir / "config.json"
 

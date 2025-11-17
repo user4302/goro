@@ -1,4 +1,4 @@
-"""Command-line interface for Gitem."""
+"""Command-line interface for GORO."""
 
 import asyncio
 import sys
@@ -9,37 +9,44 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from gitem.commands.status import status_repo, status_all
-from gitem.commands.sync import sync_repository, sync_all_repositories
-from gitem.commands.edit import edit_repository
-from gitem.config import Config, RepoConfig
+from goro.commands.status import status_repo, status_all
+from goro.commands.sync import sync_repository, sync_all_repositories
+from goro.commands.edit import edit_repository
+from goro.config import Config, RepoConfig
 
-app = typer.Typer(name="gitem", help="Gitem - A Git Repository Manager")
+app = typer.Typer(name="goro", help="GORO - A Git Repository Manager")
 console = Console()
 
 
 def version_callback(value: bool):
     """Print version and exit."""
     if value:
-        from gitem import __version__
+        from goro import __version__
 
-        console.print(f"gitem v{__version__}")
+        console.print(f"goro v{__version__}")
         raise typer.Exit()
 
 
-@app.callback()
+@app.callback(invoke_without_command=True)
 def main(
     version: bool = typer.Option(
         None, "--version", "-v", callback=version_callback, is_eager=True
     ),
+    ctx: typer.Context = typer.Context,
 ):
-    """Gitem - A TUI-based tool for managing multiple Git repositories."""
-    pass
+    """GORO - A TUI-based tool for managing multiple Git repositories.
+    
+    When no command is provided, launches the interactive TUI interface.
+    """
+    if ctx.invoked_subcommand is None:
+        from goro.tui.app import GRMApp
+        app = GRMApp()
+        app.run()
 
 
 @app.command()
 def init():
-    """Initialize the Gitem configuration."""
+    """Initialize the GORO configuration."""
     config_path = Config.get_config_path()
     if config_path.exists():
         console.print("[yellow]Configuration already exists at:[/]")
@@ -136,10 +143,10 @@ def edit(
     If no options are provided, enters interactive mode.
     
     Examples:
-        gitem edit my-repo --name new-repo-name
-        gitem edit my-repo --path /new/path
-        gitem edit my-repo --name new-name --path /new/path
-        gitem edit my-repo  # Interactive mode
+        goro edit my-repo --name new-repo-name
+        goro edit my-repo --path /new/path
+        goro edit my-repo --name new-name --path /new/path
+        goro edit my-repo  # Interactive mode
     """
     # Handle case where name might be split into multiple arguments
     if name not in Config.load().repos and len(sys.argv) > 3:
@@ -207,7 +214,7 @@ def remove(name: str):
 @app.command()
 def ui():
     """Launch the Textual TUI interface."""
-    from gitem.tui.app import GRMApp
+    from goro.tui.app import GRMApp
 
     app = GRMApp()
     app.run()

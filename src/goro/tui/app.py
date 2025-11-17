@@ -1,4 +1,4 @@
-"""Main Textual application for Gitem."""
+"""Main Textual application for GORO."""
 
 from pathlib import Path
 from typing import Optional, Dict, Any, List
@@ -25,7 +25,7 @@ from textual.widgets import (
     Tabs,
 )
 
-from gitem.config import Config, RepoConfig
+from goro.config import Config, RepoConfig
 
 # Import widgets and dialogs
 from .widgets import RepoList, RepoDetails, StatusBar
@@ -38,7 +38,7 @@ import asyncio
 from pathlib import Path
 
 class GRMApp(App):
-    """Gitem Textual Application."""
+    """GORO Textual Application."""
 
     CSS_PATH = "css/global.css"
 
@@ -59,7 +59,7 @@ class GRMApp(App):
         self.selected_repo = None
 
     def compose(self) -> ComposeResult:
-        """Create child widgets for the gitem."""
+        """Create child widgets for the goro."""
         # Main app container with grid layout
         with Container(classes="main-app"):
             yield Header(show_clock=True, id="header")
@@ -82,7 +82,7 @@ class GRMApp(App):
 
     def on_mount(self) -> None:
         """Handle app mount event."""
-        self.title = "Gitem"
+        self.title = "GORO"
         self.sub_title = f"Managing {len(self.config.repos)} repositories"
         
         # Initialize the repository list with all repositories
@@ -267,7 +267,7 @@ class GRMApp(App):
         # Define git commands to run
         commands = [
             ("git add .", "Adding changes"),
-            ('git commit -m "gitem Sync: Auto-commit by Gitem" --allow-empty-message', "Committing changes"),
+            ('git commit -m "goro Sync: Auto-commit by GORO" --allow-empty-message', "Committing changes"),
             ("git pull", "Pulling latest changes"),
             ("git push", "Pushing changes")
         ]

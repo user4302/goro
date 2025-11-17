@@ -1,4 +1,4 @@
-"""Widgets for the Gitem TUI."""
+"""Widgets for the GORO TUI."""
 
 from .repo_list import RepoList
 from .repo_details import RepoDetails

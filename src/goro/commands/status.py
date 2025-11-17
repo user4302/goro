@@ -1,4 +1,4 @@
-"""Status commands for Gitem."""
+"""Status commands for GORO."""
 
 import subprocess
 from pathlib import Path
@@ -7,7 +7,7 @@ from typing import Dict, Optional, Tuple
 from rich.console import Console
 from rich.table import Table
 
-from gitem.config import Config
+from goro.config import Config
 
 console = Console()
 

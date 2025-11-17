@@ -1,4 +1,4 @@
-"""Status bar widget for the Gitem TUI."""
+"""Status bar widget for the GORO TUI."""
 import logging
 from datetime import datetime
 from typing import List, Deque

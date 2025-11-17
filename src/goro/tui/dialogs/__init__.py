@@ -1,4 +1,4 @@
-"""Dialogs for the Gitem TUI."""
+"""Dialogs for the GORO TUI."""
 
 from .confirm_dialog import ConfirmDialog
 from .repo_dialog import RepoDialog

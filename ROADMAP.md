@@ -1,4 +1,4 @@
-# Gitem - Development Roadmap
+# GORO - Development Roadmap
 
 ## Core Features
 
@@ -79,6 +79,48 @@
   - [ ] Development
   - [ ] Testing
 
+## Core Orchestration Features (1.0 Goals)
+
+### Bulk Operations
+- [x] Run Git commands on all/selected repos (sync & status)
+  - [x] Development
+  - [x] Testing
+- [ ] Dry-run preview before bulk actions
+  - [ ] Development
+  - [ ] Testing
+- [ ] User-controlled parallelism / concurrency
+  - [ ] Development
+  - [ ] Testing
+- [ ] One-key undo / rollback for last bulk operation
+  - [ ] Development
+  - [ ] Testing
+
+### Repository Management
+- [x] Auto-discover all repos in a folder + ignore patterns
+  - [x] Development
+  - [x] Testing
+- [ ] Define execution order / dependencies between repos
+  - [ ] Development
+  - [ ] Testing
+- [ ] Conditional execution (only dirty/behind/on branch)
+  - [x] Basic filtering implemented
+  - [ ] Advanced conditions
+  - [ ] Development
+  - [ ] Testing
+- [ ] Declarative `goro.yaml` configuration
+  - [ ] Schema definition
+  - [ ] Validation
+  - [ ] Development
+  - [ ] Testing
+
+### Extensibility
+- [ ] Pre/post operation hooks
+  - [ ] Development
+  - [ ] Testing
+- [ ] Plugin system
+  - [ ] Development
+  - [ ] Testing
+
 ## Future Improvements
 
 ### Git Status
@@ -99,5 +141,29 @@
   - [ ] Progress indicators
   - [ ] Pause/resume functionality
 
+## Version Goals
+
+### v1.0.0 (Next Release)
+- [ ] Dry-run preview for all operations
+- [ ] Configurable concurrency control
+- [ ] Undo/rollback functionality
+- [ ] Basic execution ordering
+- [ ] Improved status indicators
+
+### v1.1.0
+- [ ] Advanced conditional execution
+- [ ] Repository dependencies
+- [ ] Enhanced filtering options
+
+### v1.2.0
+- [ ] Declarative `goro.yaml` support
+- [ ] Pre/post operation hooks
+- [ ] Plugin system foundation
+
+### v2.0.0
+- [ ] Full plugin ecosystem
+- [ ] Advanced dependency management
+- [ ] Enterprise features
+
 ---
-*Last updated: November 14, 2025*
+*Last updated: November 17, 2025*

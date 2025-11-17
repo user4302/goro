@@ -1,4 +1,4 @@
-"""Confirmation dialog for the Gitem TUI."""
+"""Confirmation dialog for the GORO TUI."""
 from typing import Optional, Tuple, TypeVar, Generic, Type
 from pathlib import Path
 
