@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "gitem"
+name = "git_repo_manager"
 dynamic = ["version"]
 description = "A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface"
 authors = [
@@ -40,13 +40,13 @@ dev = [
 ]
 
 [tool.hatch.build]
-packages = ["src/gitem"]
+packages = ["src/git_repo_manager"]
 
 [tool.hatch.version]
-path = "src/gitem/__init__.py"
+path = "src/git_repo_manager/__init__.py"
 
 [project.scripts]
-gitem = "gitem.cli:app"
+grm = "git_repo_manager.cli:app"
 
 [tool.black]
 line-length = 88

@@ -8,7 +8,7 @@ import typer
 from rich.console import Console
 from rich.prompt import Confirm, Prompt
 
-from gitem.config import Config, RepoConfig
+from git_repo_manager.config import Config, RepoConfig
 
 console = Console()
 

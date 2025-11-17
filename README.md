@@ -1,35 +1,36 @@
-# Gitem (v0.4.1)
+# Git Repo Manager (v0.4.2)
 
-**Git** **E**nhanced **M**anager - A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
+**Git Repo Manager** - A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
 
-> **Note**: The name "Gitem" is a playful derivation of "get 'em" (as in "get them"), combined with "Git" - because it helps you "get 'em" (manage) all your Git repositories in one place.
+> **Note**: The name "GRM" stands for "Git Repo Manager" - a powerful tool to help you manage all your Git repositories from one place.
 
 ## Features (v0.4.1)
 
 - **Improved CLI Experience**
-  - Launch TUI by default when running `gitem` without arguments
-  - Maintained backward compatibility with `gitem ui`
+  - Launch TUI by default when running `grm` without arguments
+  - Maintained backward compatibility with `grm ui`
+  - Maintained backward compatibility with `grm ui`
   - More intuitive command structure
 
 ## Features (v0.4.0)
 
 - **Project Rename**
-  - Renamed project from 'app' to 'gitem' for better clarity
+  - Renamed project from 'app' to 'grm' for better clarity
   - Updated all internal imports and references
   - Improved project structure and organization
 
 ## Features (v0.3.8)
 
 - **New Edit Command**
-  - Added `gitem edit <repo>` for interactive editing
+  - Added `grm edit <repo>` for interactive editing
   - Support for renaming repositories with `--name`
   - Update repository paths with `--path`
   - Case-insensitive repository name matching
   - Interactive confirmation prompts (can be skipped with `--force`)
 
 - **New Sync Commands**
-  - Added `gitem sync <repo>` to sync a specific repository
-  - Added `gitem sync-all` to sync all tracked repositories
+  - Added `grm sync <repo>` to sync a specific repository
+  - Added `grm sync-all` to sync all tracked repositories
   - Async operations with progress indicators
   - Case-insensitive repository name matching
   - Improved output formatting and error handling
@@ -104,7 +105,7 @@
 ## Features (v0.2.7)
 
 - Refactored project structure for better organization
-- Renamed main module from `git_repo_manager` to `app`
+  - Renamed main module from `grm` to `app`
 - Updated all imports and configurations to reflect the new structure
 - Fixed version display in the CLI
 
@@ -186,40 +187,40 @@ pip install -e ".[dev]"
 
 ```bash
 # Initialize configuration
-gitem init
+grm init
 
 # Add a repository
-gitem add my-repo ~/projects/my-repo
+grm add my-repo ~/projects/my-repo
 
 # List repositories
-gitem list
+grm list
 
 # Show status of a specific repository
-gitem status my-repo
+grm status my-repo
 
 # Show status of all repositories
-gitem status-all
+grm status-all
 
 # Sync a specific repository
-gitem sync my-repo
+grm sync my-repo
 
 # Sync all repositories
-gitem sync-all
+grm sync-all
 
 # Edit a repository (interactive mode)
-gitem edit my-repo
+grm edit my-repo
 
 # Rename a repository
-gitem edit my-repo --name new-name
+grm edit my-repo --name new-name
 
 # Update repository path
-gitem edit my-repo --path /new/path
+grm edit my-repo --path /new/path
 
 # Remove a repository
-gitem remove my-repo
+grm remove my-repo
 
 # Launch TUI
-gitem  # or 'gitem ui' for explicit TUI launch
+grm  # or 'grm ui' for explicit TUI launch
 ```
 
 ### TUI Controls

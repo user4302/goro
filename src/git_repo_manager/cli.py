@@ -9,10 +9,10 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from gitem.commands.status import status_repo, status_all
-from gitem.commands.sync import sync_repository, sync_all_repositories
-from gitem.commands.edit import edit_repository
-from gitem.config import Config, RepoConfig
+from git_repo_manager.commands.status import status_repo, status_all
+from git_repo_manager.commands.sync import sync_repository, sync_all_repositories
+from git_repo_manager.commands.edit import edit_repository
+from git_repo_manager.config import Config, RepoConfig
 
 app = typer.Typer(name="gitem", help="Gitem - A Git Repository Manager")
 console = Console()
@@ -21,7 +21,7 @@ console = Console()
 def version_callback(value: bool):
     """Print version and exit."""
     if value:
-        from gitem import __version__
+        from git_repo_manager import __version__
 
         console.print(f"gitem v{__version__}")
         raise typer.Exit()
@@ -39,7 +39,7 @@ def main(
     When no command is provided, launches the interactive TUI interface.
     """
     if ctx.invoked_subcommand is None:
-        from gitem.tui.app import GRMApp
+        from git_repo_manager.tui.app import GRMApp
         app = GRMApp()
         app.run()
 
@@ -214,7 +214,7 @@ def remove(name: str):
 @app.command()
 def ui():
     """Launch the Textual TUI interface."""
-    from gitem.tui.app import GRMApp
+    from git_repo_manager.tui.app import GRMApp
 
     app = GRMApp()
     app.run()

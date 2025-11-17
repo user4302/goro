@@ -6,7 +6,7 @@ from textual.containers import Container
 from textual.reactive import reactive
 from textual.widgets import Label, Static
 
-from gitem.config import RepoConfig
+from git_repo_manager.config import RepoConfig
 
 
 class RepoDetails(Static):

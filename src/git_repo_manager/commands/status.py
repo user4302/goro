@@ -7,7 +7,7 @@ from typing import Dict, Optional, Tuple
 from rich.console import Console
 from rich.table import Table
 
-from gitem.config import Config
+from git_repo_manager.config import Config
 
 console = Console()
 

@@ -8,7 +8,7 @@ from typing import List, Optional, Tuple
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from gitem.config import Config
+from git_repo_manager.config import Config
 
 console = Console()
 
