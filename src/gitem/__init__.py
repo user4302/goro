@@ -1,3 +1,3 @@
-"""Gitem - A TUI-based tool for managing multiple Git repositories."""
+"""Git Repo Manager - A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface."""
 
-__version__ = "0.4.1"
+__version__ = "0.4.2"
