@@ -45,4 +45,4 @@ goro                      # launches the interactive TUI instantly
 **License** — MIT  
 **Built with** — Textual • Python 3.8+
 
-Star on GitHub if you like it! ★
+Star on GitLab if you like it! ★
