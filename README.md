@@ -46,7 +46,7 @@ goro                      # launches the interactive TUI instantly
 | Platform   | Purpose                                  | Link                                                                      |
 |------------|-------------------------------------------|---------------------------------------------------------------------------|
 | **GitLab** | Source of truth • Issues • MRs • CI/CD    | https://gitlab.com/user4302_Projects/coding/python/textual/goro           |
-| **GitHub** | Mirror for discoverability & extra stars  | https://github.com/YOUR_GITHUB_USERNAME/goro                              |
+| **GitHub** | Mirror for discoverability & extra stars  | https://github.com/user4302/goro                              |
 
 > **Please file issues and feature requests on GitLab** — that’s where I actively track and fix everything.  
 > GitHub mirror is kept in sync automatically.
