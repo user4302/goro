@@ -7,7 +7,7 @@ from typing import Dict, Optional, Tuple
 from rich.console import Console
 from rich.table import Table
 
-from GitOps_Repo_Orchestrator.config import Config
+from goro.config import Config
 
 console = Console()
 

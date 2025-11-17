@@ -8,7 +8,7 @@ import typer
 from rich.console import Console
 from rich.prompt import Confirm, Prompt
 
-from GitOps_Repo_Orchestrator.config import Config, RepoConfig
+from goro.config import Config, RepoConfig
 
 console = Console()
 

@@ -3,11 +3,11 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "GitOps_Repo_Orchestrator"
+name = "goro"
 dynamic = ["version"]
 description = "A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface"
 authors = [
-    { name = "Your Name", email = "your.email@example.com" },
+    { name = "Angelo E DZ", email = "user4302@users.noreply.gitlab.com" },
 ]
 readme = "README.md"
 requires-python = ">=3.8"
@@ -40,13 +40,13 @@ dev = [
 ]
 
 [tool.hatch.build]
-packages = ["src/GitOps_Repo_Orchestrator"]
+packages = ["src/goro"]
 
 [tool.hatch.version]
-path = "src/GitOps_Repo_Orchestrator/__init__.py"
+path = "src/goro/__init__.py"
 
 [project.scripts]
-goro = "GitOps_Repo_Orchestrator.cli:app"
+goro = "goro.cli:app"
 
 [tool.black]
 line-length = 88

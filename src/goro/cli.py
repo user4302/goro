@@ -9,10 +9,10 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from GitOps_Repo_Orchestrator.commands.status import status_repo, status_all
-from GitOps_Repo_Orchestrator.commands.sync import sync_repository, sync_all_repositories
-from GitOps_Repo_Orchestrator.commands.edit import edit_repository
-from GitOps_Repo_Orchestrator.config import Config, RepoConfig
+from goro.commands.status import status_repo, status_all
+from goro.commands.sync import sync_repository, sync_all_repositories
+from goro.commands.edit import edit_repository
+from goro.config import Config, RepoConfig
 
 app = typer.Typer(name="goro", help="GORO - A Git Repository Manager")
 console = Console()
@@ -21,7 +21,7 @@ console = Console()
 def version_callback(value: bool):
     """Print version and exit."""
     if value:
-        from GitOps_Repo_Orchestrator import __version__
+        from goro import __version__
 
         console.print(f"goro v{__version__}")
         raise typer.Exit()
@@ -39,7 +39,7 @@ def main(
     When no command is provided, launches the interactive TUI interface.
     """
     if ctx.invoked_subcommand is None:
-        from GitOps_Repo_Orchestrator.tui.app import GRMApp
+        from goro.tui.app import GRMApp
         app = GRMApp()
         app.run()
 
@@ -214,7 +214,7 @@ def remove(name: str):
 @app.command()
 def ui():
     """Launch the Textual TUI interface."""
-    from GitOps_Repo_Orchestrator.tui.app import GRMApp
+    from goro.tui.app import GRMApp
 
     app = GRMApp()
     app.run()

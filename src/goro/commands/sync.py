@@ -8,7 +8,7 @@ from typing import List, Optional, Tuple
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from GitOps_Repo_Orchestrator.config import Config
+from goro.config import Config
 
 console = Console()
 

@@ -6,7 +6,7 @@ from textual.containers import Container
 from textual.reactive import reactive
 from textual.widgets import Label, Static
 
-from GitOps_Repo_Orchestrator.config import RepoConfig
+from goro.config import RepoConfig
 
 
 class RepoDetails(Static):

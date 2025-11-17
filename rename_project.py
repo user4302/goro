@@ -1,3 +1,4 @@
+# to use: python rename_project.py project_name initialization_command  
 import re
 import sys
 from pathlib import Path

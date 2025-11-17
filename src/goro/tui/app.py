@@ -25,7 +25,7 @@ from textual.widgets import (
     Tabs,
 )
 
-from GitOps_Repo_Orchestrator.config import Config, RepoConfig
+from goro.config import Config, RepoConfig
 
 # Import widgets and dialogs
 from .widgets import RepoList, RepoDetails, StatusBar

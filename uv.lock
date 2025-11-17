@@ -468,7 +468,7 @@ wheels = [
 ]
 
 [[package]]
-name = "git-repo-manager"
+name = "gitops-repo-orchestrator"
 source = { editable = "." }
 dependencies = [
     { name = "pyyaml" },
