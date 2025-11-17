@@ -1,4 +1,4 @@
-"""Status commands for Gitem."""
+"""Status commands for GORO."""
 
 import subprocess
 from pathlib import Path
@@ -7,7 +7,7 @@ from typing import Dict, Optional, Tuple
 from rich.console import Console
 from rich.table import Table
 
-from git_repo_manager.config import Config
+from GitOps_Repo_Orchestrator.config import Config
 
 console = Console()
 

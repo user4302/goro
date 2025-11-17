@@ -1,4 +1,4 @@
-"""Edit commands for Gitem."""
+"""Edit commands for GORO."""
 
 import sys
 from pathlib import Path
@@ -8,7 +8,7 @@ import typer
 from rich.console import Console
 from rich.prompt import Confirm, Prompt
 
-from git_repo_manager.config import Config, RepoConfig
+from GitOps_Repo_Orchestrator.config import Config, RepoConfig
 
 console = Console()
 

@@ -1,4 +1,4 @@
-# Gitem - Development Roadmap
+# GORO - Development Roadmap
 
 ## Core Features
 

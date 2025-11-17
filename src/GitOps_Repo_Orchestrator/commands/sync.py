@@ -1,4 +1,4 @@
-"""Sync commands for Gitem."""
+"""Sync commands for GORO."""
 
 import asyncio
 import subprocess
@@ -8,7 +8,7 @@ from typing import List, Optional, Tuple
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 
-from git_repo_manager.config import Config
+from GitOps_Repo_Orchestrator.config import Config
 
 console = Console()
 

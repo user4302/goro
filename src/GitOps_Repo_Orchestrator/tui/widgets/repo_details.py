@@ -1,4 +1,4 @@
-"""Repository details widget for the Gitem TUI."""
+"""Repository details widget for the GORO TUI."""
 from typing import Optional
 
 from textual.app import ComposeResult
@@ -6,7 +6,7 @@ from textual.containers import Container
 from textual.reactive import reactive
 from textual.widgets import Label, Static
 
-from git_repo_manager.config import RepoConfig
+from GitOps_Repo_Orchestrator.config import RepoConfig
 
 
 class RepoDetails(Static):

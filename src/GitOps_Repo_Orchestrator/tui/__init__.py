@@ -1,4 +1,4 @@
-"""TUI components for Gitem."""
+"""TUI components for GORO."""
 
 from .app import GRMApp
 

@@ -1,36 +1,36 @@
-# Git Repo Manager (v0.4.2)
+# Git Repo Manager (v0.5.0)
 
 **Git Repo Manager** - A TUI-based tool for managing multiple Git repositories in one place with an intuitive interface.
 
-> **Note**: The name "GRM" stands for "Git Repo Manager" - a powerful tool to help you manage all your Git repositories from one place.
+> **Note**: The name "GORO" stands for "Git Repo Manager" - a powerful tool to help you manage all your Git repositories from one place.
 
 ## Features (v0.4.1)
 
 - **Improved CLI Experience**
-  - Launch TUI by default when running `grm` without arguments
-  - Maintained backward compatibility with `grm ui`
-  - Maintained backward compatibility with `grm ui`
+  - Launch TUI by default when running `goro` without arguments
+  - Maintained backward compatibility with `goro ui`
+  - Maintained backward compatibility with `goro ui`
   - More intuitive command structure
 
 ## Features (v0.4.0)
 
 - **Project Rename**
-  - Renamed project from 'app' to 'grm' for better clarity
+  - Renamed project from 'app' to 'goro' for better clarity
   - Updated all internal imports and references
   - Improved project structure and organization
 
 ## Features (v0.3.8)
 
 - **New Edit Command**
-  - Added `grm edit <repo>` for interactive editing
+  - Added `goro edit <repo>` for interactive editing
   - Support for renaming repositories with `--name`
   - Update repository paths with `--path`
   - Case-insensitive repository name matching
   - Interactive confirmation prompts (can be skipped with `--force`)
 
 - **New Sync Commands**
-  - Added `grm sync <repo>` to sync a specific repository
-  - Added `grm sync-all` to sync all tracked repositories
+  - Added `goro sync <repo>` to sync a specific repository
+  - Added `goro sync-all` to sync all tracked repositories
   - Async operations with progress indicators
   - Case-insensitive repository name matching
   - Improved output formatting and error handling
@@ -105,7 +105,7 @@
 ## Features (v0.2.7)
 
 - Refactored project structure for better organization
-  - Renamed main module from `grm` to `app`
+  - Renamed main module from `goro` to `app`
 - Updated all imports and configurations to reflect the new structure
 - Fixed version display in the CLI
 
@@ -187,40 +187,40 @@ pip install -e ".[dev]"
 
 ```bash
 # Initialize configuration
-grm init
+goro init
 
 # Add a repository
-grm add my-repo ~/projects/my-repo
+goro add my-repo ~/projects/my-repo
 
 # List repositories
-grm list
+goro list
 
 # Show status of a specific repository
-grm status my-repo
+goro status my-repo
 
 # Show status of all repositories
-grm status-all
+goro status-all
 
 # Sync a specific repository
-grm sync my-repo
+goro sync my-repo
 
 # Sync all repositories
-grm sync-all
+goro sync-all
 
 # Edit a repository (interactive mode)
-grm edit my-repo
+goro edit my-repo
 
 # Rename a repository
-grm edit my-repo --name new-name
+goro edit my-repo --name new-name
 
 # Update repository path
-grm edit my-repo --path /new/path
+goro edit my-repo --path /new/path
 
 # Remove a repository
-grm remove my-repo
+goro remove my-repo
 
 # Launch TUI
-grm  # or 'grm ui' for explicit TUI launch
+goro  # or 'goro ui' for explicit TUI launch
 ```
 
 ### TUI Controls

@@ -468,7 +468,7 @@ wheels = [
 ]
 
 [[package]]
-name = "gitem"
+name = "git-repo-manager"
 source = { editable = "." }
 dependencies = [
     { name = "pyyaml" },
